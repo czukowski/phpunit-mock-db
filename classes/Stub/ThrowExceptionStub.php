@@ -16,14 +16,14 @@ class ThrowExceptionStub implements Stub
     /**
      * @var  Throwable
      */
-    private $expection;
+    private $exception;
 
     /**
      * @param  Throwable  $exception
      */
     public function __construct(Throwable $exception)
     {
-        $this->expection = $exception;
+        $this->exception = $exception;
     }
 
     /**
@@ -31,7 +31,7 @@ class ThrowExceptionStub implements Stub
      */
     public function invoke(Invocation $invocation)
     {
-        throw $this->expection;
+        throw $this->exception;
     }
 
     /**
