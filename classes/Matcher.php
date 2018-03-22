@@ -1,7 +1,8 @@
 <?php
 namespace Cz\PHPUnit\MockDB;
 
-use Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
+use Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
+    Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Matcher\QueryMatcher,
     PHPUnit\Framework\ExpectationFailedException,
     PHPUnit\Framework\TestFailure,
@@ -13,7 +14,7 @@ use Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
  * @author   czukowski
  * @license  MIT License
  */
-class Matcher implements RecordedInvocation
+class Matcher implements MatcherInvocation
 {
     /**
      * @var  RecordedInvocation
@@ -41,7 +42,7 @@ class Matcher implements RecordedInvocation
      */
     public function hasMatchers()
     {
-        return ! $this->isAnyInvokedCount();
+        return ! $this->invocationMatcher->isAnyInvokedCount();
     }
 
     /**
@@ -114,8 +115,8 @@ class Matcher implements RecordedInvocation
         try {
             $this->invocationMatcher->verify();
             if ($this->hasQueryMatcher()
-                && ! $this->isAnyInvokedCount()
-                && ! $this->isNeverInvokedCount()
+                && ! $this->invocationMatcher->isAnyInvokedCount()
+                && ! $this->invocationMatcher->isNeverInvokedCount()
             ) {
                 $this->queryMatcher->verify();
             }
@@ -142,21 +143,5 @@ class Matcher implements RecordedInvocation
             $list[] = 'where '.$this->queryMatcher->toString();
         }
         return implode(' ', $list);
-    }
-
-    /**
-     * @return  boolean
-     */
-    public function isAnyInvokedCount()
-    {
-        return $this->invocationMatcher->isAnyInvokedCount();
-    }
-
-    /**
-     * @return  boolean
-     */
-    public function isNeverInvokedCount()
-    {
-        return $this->invocationMatcher->isNeverInvokedCount();
     }
 }
