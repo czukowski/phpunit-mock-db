@@ -46,6 +46,42 @@ class InvocationMockerTest extends Testcase
     }
 
     /**
+     * @dataProvider  provideHasMatchers
+     */
+    public function testHasMatchers($matchers, $expected)
+    {
+        $object = $this->createObject();
+        foreach ($matchers as $matcher) {
+            $object->addMatcher($matcher);
+        }
+        $actual = $object->hasMatchers();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function provideHasMatchers()
+    {
+        return [
+            [
+                [],
+                FALSE,
+            ],
+            [
+                [
+                    $this->createMock(RecordedInvocation::class),
+                ],
+                TRUE,
+            ],
+            [
+                [
+                    $this->createMock(RecordedInvocation::class),
+                    $this->createMock(RecordedInvocation::class),
+                ],
+                TRUE,
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider  provideRequireMatch
      */
     public function testGetRequireMatch($value)

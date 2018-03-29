@@ -35,6 +35,14 @@ class InvocationMocker implements MatcherCollection, Invokable
     /**
      * @return  boolean
      */
+    public function hasMatchers()
+    {
+        return count($this->matchers) > 0;
+    }
+
+    /**
+     * @return  boolean
+     */
     public function getRequireMatch(): bool
     {
         return $this->requireMatch;
