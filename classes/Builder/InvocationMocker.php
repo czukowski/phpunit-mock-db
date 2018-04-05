@@ -44,6 +44,16 @@ class InvocationMocker
     }
 
     /**
+     * @return  ConsecutiveCallsBuilder
+     */
+    public function onConsecutiveCalls()
+    {
+        $stub = new ConsecutiveCallsStub;
+        $this->will($stub);
+        return new ConsecutiveCallsBuilder($this, $stub);
+    }
+
+    /**
      * @param   Constraint|string  $constraint
      * @return  $this
      */

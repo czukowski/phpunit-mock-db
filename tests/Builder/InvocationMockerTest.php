@@ -5,7 +5,7 @@ use Cz\PHPUnit\MockDB\Matcher,
     Cz\PHPUnit\MockDB\Matcher\QueryMatcher,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Stub,
-    Cz\PHPUnit\MockDB\Testcase,
+    Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub,
     Cz\PHPUnit\SQL\EqualsSQLQueriesConstraint,
     ArrayObject,
     PHPUnit\Framework\Constraint\Constraint,
@@ -20,6 +20,26 @@ use Cz\PHPUnit\MockDB\Matcher,
  */
 class InvocationMockerTest extends Testcase
 {
+    /**
+     * @dataProvider  provideOnConsecutiveCalls
+     */
+    public function testOnConsecutiveCalls($object)
+    {
+        $actual = $object->onConsecutiveCalls();
+        $this->assertInstanceOf(ConsecutiveCallsBuilder::class, $actual);
+        $this->assertSame($object, $this->getObjectAttribute($actual, 'builder'));
+        $stub = $this->getObjectAttribute($actual, 'stub');
+        $this->assertInstanceOf(ConsecutiveCallsStub::class, $stub);
+        $this->assertEmpty($this->getObjectAttribute($stub, 'stack'));
+    }
+
+    public function provideOnConsecutiveCalls()
+    {
+        return [
+            [$this->createObject()],
+        ];
+    }
+
     /**
      * @dataProvider  provideQuery
      */
@@ -246,44 +266,6 @@ class InvocationMockerTest extends Testcase
                 return TRUE;
             }
         ];
-    }
-
-    /**
-     * @param  Stub    $stub
-     * @param  array   $expectedItems
-     * @param  string  $expectedInstanceOf
-     * @param  string  $attribute
-     */
-    private function assertConsecutiveStubs(
-        Stub $stub,
-        array $expectedItems,
-        string $expectedInstanceOf,
-        string $attribute
-    ) {
-        $this->assertInstanceOf(Stub\ConsecutiveCallsStub::class, $stub);
-        $stack = $this->getObjectAttribute($stub, 'stack');
-        $this->assertInternalType('array', $stack);
-        $this->assertCount(count($expectedItems), $stack);
-        for ($i = 0; $i < count($expectedItems); $i++) {
-            $this->assertStub($stack[$i], $expectedInstanceOf, $attribute, $expectedItems[$i]);
-        }
-    }
-
-    /**
-     * @param  Stub    $stub
-     * @param  string  $expectedInstanceOf
-     * @param  string  $attribute
-     * @param  mixed   $expectedAttribute
-     */
-    private function assertStub(
-        Stub $stub,
-        string $expectedInstanceOf,
-        string $attribute,
-        $expectedAttribute
-    ) {
-        $this->assertInstanceOf($expectedInstanceOf, $stub);
-        $actual = $this->getObjectAttribute($stub, $attribute);
-        $this->assertSame($expectedAttribute, $actual);
     }
 
     /**

@@ -27,7 +27,7 @@ class ConsecutiveCallsStub implements Stub
      * @param   array  $stack
      * @throws  InvalidArgumentException
      */
-    public function __construct(array $stack)
+    public function __construct(array $stack = [])
     {
         foreach ($stack as $item) {
             if ( ! $item instanceof Stub) {
@@ -35,6 +35,14 @@ class ConsecutiveCallsStub implements Stub
             }
         }
         $this->stack = $stack;
+    }
+
+    /**
+     * @param  Stub  $stub
+     */
+    public function addStub(Stub $stub)
+    {
+        $this->stack[] = $stub;
     }
 
     /**

@@ -15,6 +15,37 @@ use Cz\PHPUnit\MockDB\Invocation,
 class ConsecutiveCallsStubTest extends Testcase
 {
     /**
+     * @dataProvider  provideAddStub
+     */
+    public function testAddStub($initialStack, $stub)
+    {
+        $object = new ConsecutiveCallsStub($initialStack);
+        $initialStackCount = count($initialStack);
+        $object->addStub($stub);
+        $stack = $this->getObjectAttribute($object, 'stack');
+        $actual = $stack[$initialStackCount];
+        $this->assertSame($stub, $actual);
+        $this->assertCount($initialStackCount + 1, $stack);
+    }
+
+    public function provideAddStub()
+    {
+        return [
+            [
+                [],
+                $this->createMock(Stub::class),
+            ],
+            [
+                [
+                    $this->createMock(Stub::class),
+                    $this->createMock(Stub::class),
+                ],
+                $this->createMock(Stub::class),
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider  provideInvoke
      */
     public function testInvoke($stack, array $invocations)
