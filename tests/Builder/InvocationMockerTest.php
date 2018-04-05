@@ -75,111 +75,221 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideWillReturnResultSet
      */
-    public function testWillReturnResultSet($resultSet)
+    public function testWillReturnResultSet($arguments, $callback)
     {
-        $object = $this->createMockObjectForWillTest(function ($stub) use ($resultSet) {
-            $this->assertInstanceOf(Stub\ReturnResultSetStub::class, $stub);
-            $actual = $this->getObjectAttribute($stub, 'value');
-            $this->assertSame($resultSet, $actual);
-            return TRUE;
-        });
-        $actual = $object->willReturnResultSet($resultSet);
+        $object = $this->createMockObjectForWillTest($callback);
+        $actual = $object->willReturnResultSet(...$arguments);
         $this->assertSame($object, $actual);
     }
 
     public function provideWillReturnResultSet()
     {
+        $resultSet1 = [];
+        $resultSet2 = [
+            ['id' => 1],
+            ['id' => 2],
+        ];
+        $resultSet3 = [
+            ['id' => 2],
+            ['id' => 3],
+        ];
         return [
-            [
-                NULL,
-            ],
-            [
-                []
-            ],
-            [
-                [
-                    ['id' => 1],
-                    ['id' => 2],
-                ],
-            ],
-            [
-                new ArrayObject([
-                    ['id' => 1],
-                    ['id' => 2],
-                ]),
-            ],
+            $this->createWillReturnResultSetTestCaseSingleCall(NULL),
+            $this->createWillReturnResultSetTestCaseSingleCall($resultSet1),
+            $this->createWillReturnResultSetTestCaseSingleCall($resultSet2),
+            $this->createWillReturnResultSetTestCaseSingleCall(new ArrayObject($resultSet2)),
+            $this->createWillReturnResultSetTestCaseConsecutiveCalls([$resultSet1, $resultSet2]),
+            $this->createWillReturnResultSetTestCaseConsecutiveCalls([new ArrayObject($resultSet2), new ArrayObject($resultSet3)]),
+        ];
+    }
+
+    private function createWillReturnResultSetTestCaseSingleCall($value)
+    {
+        return [
+            [$value],
+            function ($stub) use ($value) {
+                $this->assertStub($stub, Stub\ReturnResultSetStub::class, 'value', $value);
+                return TRUE;
+            },
+        ];
+    }
+
+    private function createWillReturnResultSetTestCaseConsecutiveCalls(array $values)
+    {
+        return [
+            $values,
+            function ($stub) use ($values) {
+                $this->assertConsecutiveStubs($stub, $values, Stub\ReturnResultSetStub::class, 'value');
+                return TRUE;
+            }
         ];
     }
 
     /**
      * @dataProvider  provideWillSetAffectedRows
      */
-    public function testWillSetAffectedRows($count)
+    public function testWillSetAffectedRows($arguments, $callback)
     {
-        $object = $this->createMockObjectForWillTest(function ($stub) use ($count) {
-            $this->assertInstanceOf(Stub\SetAffectedRowsStub::class, $stub);
-            $actual = $this->getObjectAttribute($stub, 'value');
-            $this->assertSame($count, $actual);
-            return TRUE;
-        });
-        $actual = $object->willSetAffectedRows($count);
+        $object = $this->createMockObjectForWillTest($callback);
+        $actual = $object->willSetAffectedRows(...$arguments);
         $this->assertSame($object, $actual);
     }
 
     public function provideWillSetAffectedRows()
     {
         return [
-            [0],
-            [100],
+            $this->createWillSetAffectedRowsTestCaseSingleCall(0),
+            $this->createWillSetAffectedRowsTestCaseSingleCall(100),
+            $this->createWillSetAffectedRowsTestCaseConsecutiveCalls([1, 2, 3]),
+        ];
+    }
+
+    private function createWillSetAffectedRowsTestCaseSingleCall($value)
+    {
+        return [
+            [$value],
+            function ($stub) use ($value) {
+                $this->assertStub($stub, Stub\SetAffectedRowsStub::class, 'value', $value);
+                return TRUE;
+            },
+        ];
+    }
+
+    private function createWillSetAffectedRowsTestCaseConsecutiveCalls(array $values)
+    {
+        return [
+            $values,
+            function ($stub) use ($values) {
+                $this->assertConsecutiveStubs($stub, $values, Stub\SetAffectedRowsStub::class, 'value');
+                return TRUE;
+            }
         ];
     }
 
     /**
      * @dataProvider  provideWillSetLastInsertId
      */
-    public function testWillSetLastInsertId($value)
+    public function testWillSetLastInsertId($arguments, $callback)
     {
-        $object = $this->createMockObjectForWillTest(function ($stub) use ($value) {
-            $this->assertInstanceOf(Stub\SetLastInsertIdStub::class, $stub);
-            $actual = $this->getObjectAttribute($stub, 'value');
-            $this->assertSame($value, $actual);
-            return TRUE;
-        });
-        $actual = $object->willSetLastInsertId($value);
+        $object = $this->createMockObjectForWillTest($callback);
+        $actual = $object->willSetLastInsertId(...$arguments);
         $this->assertSame($object, $actual);
     }
 
     public function provideWillSetLastInsertId()
     {
         return [
-            [NULL],
-            [123],
-            ['456'],
+            $this->createWillSetLastInsertIdTestCaseSingleCall(NULL),
+            $this->createWillSetLastInsertIdTestCaseSingleCall(123),
+            $this->createWillSetLastInsertIdTestCaseSingleCall('456'),
+            $this->createWillSetLastInsertIdTestCaseConsecutiveCalls([NULL, 1, 2]),
+        ];
+    }
+
+    private function createWillSetLastInsertIdTestCaseSingleCall($value)
+    {
+        return [
+            [$value],
+            function ($stub) use ($value) {
+                $this->assertStub($stub, Stub\SetLastInsertIdStub::class, 'value', $value);
+                return TRUE;
+            },
+        ];
+    }
+
+    private function createWillSetLastInsertIdTestCaseConsecutiveCalls(array $values)
+    {
+        return [
+            $values,
+            function ($stub) use ($values) {
+                $this->assertConsecutiveStubs($stub, $values, Stub\SetLastInsertIdStub::class, 'value');
+                return TRUE;
+            }
         ];
     }
 
     /**
      * @dataProvider  provideWillThrowException
      */
-    public function testWillThrowException($error)
+    public function testWillThrowException($arguments, $callback)
     {
-        $object = $this->createMockObjectForWillTest(function ($stub) use ($error) {
-            $this->assertInstanceOf(Stub\ThrowExceptionStub::class, $stub);
-            $actual = $this->getObjectAttribute($stub, 'exception');
-            $this->assertSame($error, $actual);
-            return TRUE;
-        });
-        $actual = $object->willThrowException($error);
+        $object = $this->createMockObjectForWillTest($callback);
+        $actual = $object->willThrowException(...$arguments);
         $this->assertSame($object, $actual);
     }
 
     public function provideWillThrowException()
     {
         return [
-            [new RuntimeException],
+            $this->createWillThrowExceptionTestCaseSingleCall(new RuntimeException),
+            $this->createWillThrowExceptionTestCaseConsecutiveCalls([new RuntimeException, new RuntimeException]),
         ];
     }
 
+    private function createWillThrowExceptionTestCaseSingleCall($value)
+    {
+        return [
+            [$value],
+            function ($stub) use ($value) {
+                $this->assertStub($stub, Stub\ThrowExceptionStub::class, 'exception', $value);
+                return TRUE;
+            },
+        ];
+    }
+
+    private function createWillThrowExceptionTestCaseConsecutiveCalls(array $values)
+    {
+        return [
+            $values,
+            function ($stub) use ($values) {
+                $this->assertConsecutiveStubs($stub, $values, Stub\ThrowExceptionStub::class, 'exception');
+                return TRUE;
+            }
+        ];
+    }
+
+    /**
+     * @param  Stub    $stub
+     * @param  array   $expectedItems
+     * @param  string  $expectedInstanceOf
+     * @param  string  $attribute
+     */
+    private function assertConsecutiveStubs(
+        Stub $stub,
+        array $expectedItems,
+        string $expectedInstanceOf,
+        string $attribute
+    ) {
+        $this->assertInstanceOf(Stub\ConsecutiveCallsStub::class, $stub);
+        $stack = $this->getObjectAttribute($stub, 'stack');
+        $this->assertInternalType('array', $stack);
+        $this->assertCount(count($expectedItems), $stack);
+        for ($i = 0; $i < count($expectedItems); $i++) {
+            $this->assertStub($stack[$i], $expectedInstanceOf, $attribute, $expectedItems[$i]);
+        }
+    }
+
+    /**
+     * @param  Stub    $stub
+     * @param  string  $expectedInstanceOf
+     * @param  string  $attribute
+     * @param  mixed   $expectedAttribute
+     */
+    private function assertStub(
+        Stub $stub,
+        string $expectedInstanceOf,
+        string $attribute,
+        $expectedAttribute
+    ) {
+        $this->assertInstanceOf($expectedInstanceOf, $stub);
+        $actual = $this->getObjectAttribute($stub, $attribute);
+        $this->assertSame($expectedAttribute, $actual);
+    }
+
+    /**
+     * @param   callable  $checkArgument
+     * @return  InvocationMocker
+     */
     private function createMockObjectForWillTest(callable $checkArgument)
     {
         $object = $this->getMockBuilder(InvocationMocker::class)
@@ -193,6 +303,9 @@ class InvocationMockerTest extends Testcase
         return $object;
     }
 
+    /**
+     * @return  InvocationMocker
+     */
     private function createObject()
     {
         return new InvocationMocker(
@@ -201,6 +314,10 @@ class InvocationMockerTest extends Testcase
         );
     }
 
+    /**
+     * @param   InvocationMocker  $object
+     * @return  Matcher
+     */
     private function getObjectMatcher(InvocationMocker $object)
     {
         $matcher = $this->getObjectAttribute($object, 'matcher');
