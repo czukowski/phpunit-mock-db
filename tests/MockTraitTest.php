@@ -1,8 +1,6 @@
 <?php
 namespace Cz\PHPUnit\MockDB;
 
-use Cz\PHPUnit\MockDB\MockObject\MockWrapper;
-
 /**
  * MockTraitTest
  * 

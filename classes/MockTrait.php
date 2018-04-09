@@ -1,9 +1,7 @@
 <?php
 namespace Cz\PHPUnit\MockDB;
 
-use Cz\PHPUnit\MockDB\MockObject\MockWrapper,
-    PHPUnit_Framework_MockObject_MockObject as MockObject,
-    LogicException;
+use LogicException;
 
 /**
  * MockTrait
@@ -50,7 +48,7 @@ trait MockTrait
     }
 
     /**
-     * Verify DB mock objects ().
+     * Verify DB mock objects.
      */
     protected function verifyMockObjects()
     {
