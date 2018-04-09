@@ -93,6 +93,46 @@ class InvocationMockerTest extends Testcase
     }
 
     /**
+     * @dataProvider  provideWillInvokeCallback
+     */
+    public function testWillInvokeCallback($arguments, $callback)
+    {
+        $object = $this->createMockObjectForWillTest($callback);
+        $actual = $object->willInvokeCallback(...$arguments);
+        $this->assertSame($object, $actual);
+    }
+
+    public function provideWillInvokeCallback()
+    {
+        return [
+            $this->createWillInvokeCallbackTestCaseSingleCall(function () {}),
+            $this->createWillInvokeCallbackTestCaseConsecutiveCalls([function () {}, function () {}]),
+        ];
+    }
+
+    private function createWillInvokeCallbackTestCaseSingleCall($callback)
+    {
+        return [
+            [$callback],
+            function ($stub) use ($callback) {
+                $this->assertStub($stub, Stub\InvokeCallbackStub::class, 'callback', $callback);
+                return TRUE;
+            },
+        ];
+    }
+
+    private function createWillInvokeCallbackTestCaseConsecutiveCalls($callbacks)
+    {
+        return [
+            $callbacks,
+            function ($stub) use ($callbacks) {
+                $this->assertConsecutiveStubs($stub, $callbacks, Stub\InvokeCallbackStub::class, 'callback');
+                return TRUE;
+            },
+        ];
+    }
+
+    /**
      * @dataProvider  provideWillReturnResultSet
      */
     public function testWillReturnResultSet($arguments, $callback)

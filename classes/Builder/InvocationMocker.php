@@ -6,6 +6,7 @@ use Cz\PHPUnit\MockDB\Matcher,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Stub,
     Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub,
+    Cz\PHPUnit\MockDB\Stub\InvokeCallbackStub,
     Cz\PHPUnit\MockDB\Stub\MatcherCollection,
     Cz\PHPUnit\MockDB\Stub\ReturnResultSetStub,
     Cz\PHPUnit\MockDB\Stub\SetAffectedRowsStub,
@@ -74,6 +75,22 @@ class InvocationMocker
     {
         $this->matcher->setStub($stub);
         return $this;
+    }
+
+    /**
+     * @param   callable  $callback
+     * @param   callable  $nextCallbacks ...
+     * @return  $this
+     */
+    public function willInvokeCallback(callable $callback, ...$nextCallbacks)
+    {
+        return $this->createStub(
+            function ($argument) {
+                return new InvokeCallbackStub($argument);
+            },
+            $callback,
+            $nextCallbacks
+        );
     }
 
     /**

@@ -1,7 +1,8 @@
 <?php
 namespace Cz\PHPUnit\MockDB;
 
-use LogicException,
+use Cz\PHPUnit\MockDB\Invocation,
+    LogicException,
     PHPUnit\Framework\Exception,
     RuntimeException,
     Throwable;
@@ -249,6 +250,49 @@ class MockTraitIntegrationTest extends Testcase
                 'INSERT INTO `t1` VALUES ("a", "b", "c")',
                 new RuntimeException('Deadlock'),
                 [1, 2, 3],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider  provideMatchWithQueryMatchersWithCustomCallbackHandlers
+     */
+    public function testMatchWithQueryMatchersWithCustomCallbackHandlers($constraint, $callback, $query, $expected)
+    {
+        $this->createDatabaseMock()
+            ->expects($this->once())
+            ->query($constraint)
+            ->willInvokeCallback($callback);
+        $actual = $this->db->query($query);
+        $this->assertSame($expected, $actual);
+    }
+
+    public function provideMatchWithQueryMatchersWithCustomCallbackHandlers()
+    {
+        return [
+            [
+                $this->stringStartsWith('INSERT'),
+                function (Invocation $invocation) {
+                    $invocation->setLastInsertId(1);
+                },
+                'INSERT INTO `t1` VALUES ("foo")',
+                1,
+            ],
+            [
+                $this->stringStartsWith('UPDATE'),
+                function (Invocation $invocation) {
+                    $invocation->setAffectedRows(0);
+                },
+                'UPDATE `t1` SET `name` = "foo" WHERE `name` = "bar"',
+                0,
+            ],
+            [
+                $this->stringStartsWith('SELECT'),
+                function (Invocation $invocation) {
+                    $invocation->setResultSet([['name' => 'foo']]);
+                },
+                'SELECT * FROM `t`',
+                [['name' => 'foo']],
             ],
         ];
     }

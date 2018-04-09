@@ -3,6 +3,7 @@ namespace Cz\PHPUnit\MockDB\Builder;
 
 use Cz\PHPUnit\MockDB\Stub,
     Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub,
+    Cz\PHPUnit\MockDB\Stub\InvokeCallbackStub,
     Cz\PHPUnit\MockDB\Stub\ReturnResultSetStub,
     Cz\PHPUnit\MockDB\Stub\SetAffectedRowsStub,
     Cz\PHPUnit\MockDB\Stub\SetLastInsertIdStub,
@@ -63,6 +64,26 @@ class ConsecutiveCallsBuilderTest extends Testcase
             [new SetAffectedRowsStub(0)],
             [new SetLastInsertIdStub(1)],
             [new ThrowExceptionStub(new RuntimeException)],
+        ];
+    }
+
+    /**
+     * @dataProvider  provideWillInvokeCallback
+     */
+    public function testWillInvokeCallback($callback)
+    {
+        $object = $this->createMockObjectForWillTest(function ($stub) use ($callback) {
+            $this->assertStub($stub, InvokeCallbackStub::class, 'callback', $callback);
+            return TRUE;
+        });
+        $actual = $object->willInvokeCallback($callback);
+        $this->assertSame($object, $actual);
+    }
+
+    public function provideWillInvokeCallback()
+    {
+        return [
+            [function () {}],
         ];
     }
 

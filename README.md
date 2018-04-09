@@ -123,6 +123,27 @@ $this->createDatabaseMock()
     ->willSetLastInsertId(3);
 ```
 
+Set up custom callbacks to handle database queries (callbacks don't have to return anything):
+
+```php
+$mock = $this->createDatabaseMock();
+$mock->expects($this->any())
+    ->query($this->stringStartsWith('INSERT'))
+    ->willInvokeCallback(function ($invocation) {
+        $invocation->setLastInsertId(1);
+    });
+$mock->expects($this->any())
+    ->query($this->stringStartsWith('UPDATE'))
+    ->willInvokeCallback(function ($invocation) {
+        $invocation->setAffectedRows(0);
+    });
+$mock->expects($this->any())
+    ->query($this->stringStartsWith('SELECT'))
+    ->willInvokeCallback(function ($invocation) {
+        $invocation->setResultSet([]);
+    });
+```
+
 License
 -------
 

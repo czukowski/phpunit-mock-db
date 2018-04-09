@@ -3,6 +3,7 @@ namespace Cz\PHPUnit\MockDB\Builder;
 
 use Cz\PHPUnit\MockDB\Stub,
     Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub,
+    Cz\PHPUnit\MockDB\Stub\InvokeCallbackStub,
     Cz\PHPUnit\MockDB\Stub\ReturnResultSetStub,
     Cz\PHPUnit\MockDB\Stub\SetAffectedRowsStub,
     Cz\PHPUnit\MockDB\Stub\SetLastInsertIdStub,
@@ -52,6 +53,15 @@ class ConsecutiveCallsBuilder
     {
         $this->stub->addStub($stub);
         return $this;
+    }
+
+    /**
+     * @param   callable  $callback
+     * @return  $this
+     */
+    public function willInvokeCallback(callable $callback)
+    {
+        return $this->will(new InvokeCallbackStub($callback));
     }
 
     /**
