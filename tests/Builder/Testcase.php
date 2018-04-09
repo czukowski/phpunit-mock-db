@@ -24,7 +24,7 @@ abstract class Testcase extends MockDB\Testcase
         $expectedInstanceOf,
         $attribute
     ) {
-        $this->assertInstanceOf(Stub\ConsecutiveCallsStub::class, $stub);
+        $this->assertInstanceOf('Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub', $stub);
         $stack = $this->getObjectAttribute($stub, 'stack');
         $this->assertInternalType('array', $stack);
         $this->assertCount(count($expectedItems), $stack);

@@ -17,35 +17,22 @@ class MockTraitTest extends Testcase
     public function testCreateDatabaseMock()
     {
         $setMockObject = NULL;
-        $registerMockObject = NULL;
-        $db = $this->createMock(DatabaseDriverInterface::class);
+        $db = $this->createMock('Cz\PHPUnit\MockDB\DatabaseDriverInterface');
         $db->expects($this->once())
             ->method('setMockObject')
             ->with($this->callback(
                 function ($mock) use ( & $setMockObject) {
-                    $this->assertInstanceOf(Mock::class, $mock);
+                    $this->assertInstanceOf('Cz\PHPUnit\MockDB\Mock', $mock);
                     $setMockObject = $mock;
                     return TRUE;
                 }
             ));
         $methods = ['getDatabaseDriver'];
-        $object = $this->getMockForTrait(MockTrait::class, [], '', TRUE, TRUE, TRUE, $methods);
+        $object = $this->getMockForTrait('Cz\PHPUnit\MockDB\MockTrait', [], '', TRUE, TRUE, TRUE, $methods);
         $object->expects($this->once())
             ->method('getDatabaseDriver')
             ->will($this->returnValue($db));
-        $object->expects($this->once())
-            ->method('registerMockObject')
-            ->with($this->callback(
-                function ($mockObject) use ( & $registerMockObject) {
-                    $this->assertInstanceOf(MockWrapper::class, $mockObject);
-                    $mock = $this->getObjectAttribute($mockObject, 'object');
-                    $this->assertInstanceOf(Mock::class, $mock);
-                    $registerMockObject = $mock;
-                    return TRUE;
-                }
-            ));
         $actual = $object->createDatabaseMock();
         $this->assertSame($actual, $setMockObject);
-        $this->assertSame($actual, $registerMockObject);
     }
 }

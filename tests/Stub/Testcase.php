@@ -34,8 +34,8 @@ abstract class Testcase extends MockDB\Testcase
      */
     protected function createInvocation(array $skipMethods = [])
     {
-        $invocation = $this->createMock(Invocation::class);
-        foreach ($this->getAbstractMethods(Invocation::class) as $name) {
+        $invocation = $this->createMock('Cz\PHPUnit\MockDB\Invocation');
+        foreach ($this->getAbstractMethods('Cz\PHPUnit\MockDB\Invocation') as $name) {
             if ( ! in_array($name, $skipMethods)) {
                 $invocation->expects($this->never())
                     ->method($name);

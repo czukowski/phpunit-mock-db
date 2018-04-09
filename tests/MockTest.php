@@ -29,7 +29,7 @@ class MockTest extends Testcase
         $this->expectExceptionFromArgument($expected);
         $builder = $object->expects($argument);
 
-        $this->assertInstanceOf(InvocationMockerBuilder::class, $builder);
+        $this->assertInstanceOf('Cz\PHPUnit\MockDB\Builder\InvocationMocker', $builder);
         $actual = $invocationMocker->matcher;
         if (is_callable($expected)) {
             call_user_func($expected, $actual, $container);
@@ -45,7 +45,7 @@ class MockTest extends Testcase
             $this->createExpectsTestCaseException(NULL),
             $this->createExpectsTestCaseException(3.14),
             $this->createExpectsTestCaseException('foo'),
-            $this->createExpectsTestCaseMockDbInvocationMatcher($this->createMock(RecordedInvocation::class)),
+            $this->createExpectsTestCaseMockDbInvocationMatcher($this->createMock('Cz\PHPUnit\MockDB\Matcher\RecordedInvocation')),
             $this->createExpectsTestCaseWrappedInvocationMatcher($this->any()),
             $this->createExpectsTestCaseWrappedInvocationMatcher($this->once()),
             $this->createExpectsTestCaseWrappedInvocationMatcher($this->never()),
@@ -67,7 +67,7 @@ class MockTest extends Testcase
         return [
             $matcher,
             function ($actual, $container) use ($matcher) {
-                $this->assertInstanceOf(MatcherInvocationWrapper::class, $actual);
+                $this->assertInstanceOf('Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper', $actual);
                 $this->assertSame($container, $this->getObjectAttribute($actual, 'container'));
                 $this->assertSame($matcher, $this->getObjectAttribute($actual, 'invocation'));
             }
@@ -106,7 +106,7 @@ class MockTest extends Testcase
         return [
             $query,
             function ($actual) use ($query) {
-                $this->assertInstanceOf(QueryInvocation::class, $actual);
+                $this->assertInstanceOf('Cz\PHPUnit\MockDB\Invocation\QueryInvocation', $actual);
                 $this->assertSame($query, $actual->getQuery());
             }
         ];

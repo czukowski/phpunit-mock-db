@@ -40,7 +40,7 @@ class MatcherTest extends Testcase
 
     private function createMatcherInvocationMock($isAnyInvokedCount)
     {
-        $mock = $this->createMock(RecordedInvocation::class);
+        $mock = $this->createMock('Cz\PHPUnit\MockDB\Matcher\RecordedInvocation');
         $mock->expects($this->once())
             ->method('isAnyInvokedCount')
             ->willReturn($isAnyInvokedCount);
@@ -57,7 +57,7 @@ class MatcherTest extends Testcase
      */
     public function testQueryMatcher($constraint)
     {
-        $object = new Matcher($this->createMock(RecordedInvocation::class));
+        $object = new Matcher($this->createMock('Cz\PHPUnit\MockDB\Matcher\RecordedInvocation'));
         $this->assertNull($object->getQueryMatcher());
         $this->assertFalse($object->hasQueryMatcher());
         $matcher = new QueryMatcher($constraint);
@@ -71,7 +71,7 @@ class MatcherTest extends Testcase
     public function provideQueryMatcher()
     {
         return [
-            [$this->createMock(Constraint::class)],
+            [$this->createMock('PHPUnit_Framework_Constraint')],
             [$this->stringStartsWith('SELECT')],
             [new EqualsSQLQueriesConstraint('SELECT * FROM `t`')],
         ];
@@ -82,12 +82,12 @@ class MatcherTest extends Testcase
      */
     public function testInvoked($invocation, $invocationMatcherSetup, $stubSetup)
     {
-        $invocationMatcher = $this->createMock(RecordedInvocation::class);
+        $invocationMatcher = $this->createMock('Cz\PHPUnit\MockDB\Matcher\RecordedInvocation');
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
 
         $object = new Matcher($invocationMatcher);
         if ($stubSetup !== NULL) {
-            $stub = $this->createMock(Stub::class);
+            $stub = $this->createMock('Cz\PHPUnit\MockDB\Stub');
             $this->setupMockObject($stub, $stubSetup);
             $object->setStub($stub);
         }
@@ -134,12 +134,12 @@ class MatcherTest extends Testcase
      */
     public function testMatches($invocation, $invocationMatcherSetup, $queryMatcherSetup, $expected)
     {
-        $invocationMatcher = $this->createMock(RecordedInvocation::class);
+        $invocationMatcher = $this->createMock('Cz\PHPUnit\MockDB\Matcher\RecordedInvocation');
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
 
         $object = new Matcher($invocationMatcher);
         if ($queryMatcherSetup !== NULL) {
-            $queryMatcher = $this->createMock(QueryMatcher::class);
+            $queryMatcher = $this->createMock('Cz\PHPUnit\MockDB\Matcher\QueryMatcher');
             $this->setupMockObject($queryMatcher, $queryMatcherSetup);
             $object->setQueryMatcher($queryMatcher);
         }
@@ -193,7 +193,7 @@ class MatcherTest extends Testcase
      */
     public function testVerifyInvocationMatcher($invocationMatcherSetup, $expected)
     {
-        $invocationMatcher = $this->createMock(RecordedInvocation::class);
+        $invocationMatcher = $this->createMock('Cz\PHPUnit\MockDB\Matcher\RecordedInvocation');
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
 
         $object = new Matcher($invocationMatcher);
@@ -232,11 +232,11 @@ class MatcherTest extends Testcase
      */
     public function testVerifyQueryMatcher($invocationMatcherSetup, $queryMatcherSetup, $expected)
     {
-        $invocationMatcher = $this->createMock(RecordedInvocation::class);
+        $invocationMatcher = $this->createMock('Cz\PHPUnit\MockDB\Matcher\RecordedInvocation');
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
 
         $object = new Matcher($invocationMatcher);
-        $queryMatcher = $this->createMock(QueryMatcher::class);
+        $queryMatcher = $this->createMock('Cz\PHPUnit\MockDB\Matcher\QueryMatcher');
         $this->setupMockObject($queryMatcher, $queryMatcherSetup);
         $object->setQueryMatcher($queryMatcher);
         $this->expectExceptionFromArgument($expected);
@@ -294,7 +294,7 @@ class MatcherTest extends Testcase
 
     private function createInvocationMock()
     {
-        return $this->createMock(Invocation::class);
+        return $this->createMock('Cz\PHPUnit\MockDB\Invocation');
     }
 
     private function setupMockObject($object, array $setup)
@@ -304,7 +304,7 @@ class MatcherTest extends Testcase
                 $im = $object->expects($invocation['expects'])
                     ->method($method);
                 if (isset($invocation['with'])) {
-                    $im->with(...$invocation['with']);
+                    call_user_func_array([$im, 'with'], $invocation['with']);
                 }
                 if (isset($invocation['will'])) {
                     $im->will($invocation['will']);

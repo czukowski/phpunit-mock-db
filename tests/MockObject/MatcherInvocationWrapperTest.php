@@ -33,8 +33,8 @@ class MatcherInvocationWrapperTest extends Testcase
     {
         return [
             [
-                $this->createMock(BaseInvocation::class),
-                $this->createMock(InvocationWrapper::class),
+                $this->createMock('Cz\PHPUnit\MockDB\Invocation'),
+                $this->createMock('Cz\PHPUnit\MockDB\MockObject\InvocationWrapper'),
             ],
         ];
     }
@@ -61,13 +61,13 @@ class MatcherInvocationWrapperTest extends Testcase
     {
         return [
             [
-                $this->createMock(BaseInvocation::class),
-                $this->createMock(InvocationWrapper::class),
+                $this->createMock('Cz\PHPUnit\MockDB\Invocation'),
+                $this->createMock('Cz\PHPUnit\MockDB\MockObject\InvocationWrapper'),
                 TRUE,
             ],
             [
-                $this->createMock(BaseInvocation::class),
-                $this->createMock(InvocationWrapper::class),
+                $this->createMock('Cz\PHPUnit\MockDB\Invocation'),
+                $this->createMock('Cz\PHPUnit\MockDB\MockObject\InvocationWrapper'),
                 FALSE,
             ],
         ];
@@ -99,7 +99,7 @@ class MatcherInvocationWrapperTest extends Testcase
     {
         return [
             [
-                $this->createMock(MockObjectMatcherInvocation::class),
+                $this->createMock('PHPUnit_Framework_MockObject_Matcher_Invocation'),
                 FALSE,
             ],
             [
@@ -135,7 +135,7 @@ class MatcherInvocationWrapperTest extends Testcase
     {
         return [
             [
-                $this->createMock(MockObjectMatcherInvocation::class),
+                $this->createMock('PHPUnit_Framework_MockObject_Matcher_Invocation'),
                 FALSE,
             ],
             [
@@ -163,7 +163,7 @@ class MatcherInvocationWrapperTest extends Testcase
 
     private function createContainer($baseInvocation, $wrappedInvocation)
     {
-        $object = $this->createMock(InvocationsContainer::class);
+        $object = $this->createMock('Cz\PHPUnit\MockDB\MockObject\InvocationsContainer');
         $object->expects($this->once())
             ->method('getMockObjectInvocation')
             ->with($baseInvocation)
@@ -173,13 +173,13 @@ class MatcherInvocationWrapperTest extends Testcase
 
     private function createMatcherInvocation()
     {
-        return $this->createMock(MockObjectMatcherInvocation::class);
+        return $this->createMock('PHPUnit_Framework_MockObject_Matcher_Invocation');
     }
 
     private function createObject(MockObjectMatcherInvocation $invocation, InvocationsContainer $container = NULL)
     {
         if ($container === NULL) {
-            $container = $this->createMock(InvocationsContainer::class);
+            $container = $this->createMock('Cz\PHPUnit\MockDB\MockObject\InvocationsContainer');
         }
         return new MatcherInvocationWrapper($invocation, $container);
     }

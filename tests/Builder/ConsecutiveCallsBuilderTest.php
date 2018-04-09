@@ -26,7 +26,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     {
         $object = new ConsecutiveCallsBuilder(
             $builder,
-            $this->createMock(ConsecutiveCallsStub::class)
+            $this->createMock('Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub')
         );
         $actual = $object->done();
         $this->assertSame($builder, $actual);
@@ -35,7 +35,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     public function provideDone()
     {
         return [
-            [$this->createMock(InvocationMocker::class)],
+            [$this->createMock('Cz\PHPUnit\MockDB\Builder\InvocationMocker')],
         ];
     }
 
@@ -44,12 +44,12 @@ class ConsecutiveCallsBuilderTest extends Testcase
      */
     public function testWill($argument)
     {
-        $stub = $this->createMock(ConsecutiveCallsStub::class);
+        $stub = $this->createMock('Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub');
         $stub->expects($this->once())
             ->method('addStub')
             ->with($argument);
         $object = new ConsecutiveCallsBuilder(
-            $this->createMock(InvocationMocker::class),
+            $this->createMock('Cz\PHPUnit\MockDB\Builder\InvocationMocker'),
             $stub
         );
         $actual = $object->will($argument);
@@ -59,7 +59,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     public function provideWill()
     {
         return [
-            [$this->createMock(Stub::class)],
+            [$this->createMock('Cz\PHPUnit\MockDB\Stub')],
             [new ReturnResultSetStub([])],
             [new SetAffectedRowsStub(0)],
             [new SetLastInsertIdStub(1)],
@@ -73,7 +73,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     public function testWillInvokeCallback($callback)
     {
         $object = $this->createMockObjectForWillTest(function ($stub) use ($callback) {
-            $this->assertStub($stub, InvokeCallbackStub::class, 'callback', $callback);
+            $this->assertStub($stub, 'Cz\PHPUnit\MockDB\Stub\InvokeCallbackStub', 'callback', $callback);
             return TRUE;
         });
         $actual = $object->willInvokeCallback($callback);
@@ -93,7 +93,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     public function testWillReturnResultSet($resultSet)
     {
         $object = $this->createMockObjectForWillTest(function ($stub) use ($resultSet) {
-            $this->assertStub($stub, ReturnResultSetStub::class, 'value', $resultSet);
+            $this->assertStub($stub, 'Cz\PHPUnit\MockDB\Stub\ReturnResultSetStub', 'value', $resultSet);
             return TRUE;
         });
         $actual = $object->willReturnResultSet($resultSet);
@@ -119,7 +119,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     public function testWillSetAffectedRows($count)
     {
         $object = $this->createMockObjectForWillTest(function ($stub) use ($count) {
-            $this->assertStub($stub, SetAffectedRowsStub::class, 'value', $count);
+            $this->assertStub($stub, 'Cz\PHPUnit\MockDB\Stub\SetAffectedRowsStub', 'value', $count);
             return TRUE;
         });
         $actual = $object->willSetAffectedRows($count);
@@ -141,7 +141,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     public function testWillSetLastInsertId($value)
     {
         $object = $this->createMockObjectForWillTest(function ($stub) use ($value) {
-            $this->assertStub($stub, SetLastInsertIdStub::class, 'value', $value);
+            $this->assertStub($stub, 'Cz\PHPUnit\MockDB\Stub\SetLastInsertIdStub', 'value', $value);
             return TRUE;
         });
         $actual = $object->willSetLastInsertId($value);
@@ -163,7 +163,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
     public function testWillThrowException($value)
     {
         $object = $this->createMockObjectForWillTest(function ($stub) use ($value) {
-            $this->assertStub($stub, ThrowExceptionStub::class, 'exception', $value);
+            $this->assertStub($stub, 'Cz\PHPUnit\MockDB\Stub\ThrowExceptionStub', 'exception', $value);
             return TRUE;
         });
         $actual = $object->willThrowException($value);
@@ -183,7 +183,7 @@ class ConsecutiveCallsBuilderTest extends Testcase
      */
     private function createMockObjectForWillTest(callable $checkArgument)
     {
-        $object = $this->getMockBuilder(ConsecutiveCallsBuilder::class)
+        $object = $this->getMockBuilder('Cz\PHPUnit\MockDB\Builder\ConsecutiveCallsBuilder')
             ->disableOriginalConstructor()
             ->setMethods(['will'])
             ->getMock();

@@ -141,10 +141,10 @@ class MockTraitIntegrationTest extends Testcase
      */
     public function testMatchWithQueryMatchersWithConsecutiveCalls($query, $expecteds)
     {
-        $this->createDatabaseMock()
+        $im = $this->createDatabaseMock()
             ->expects($this->exactly(count($expecteds)))
-            ->query($query)
-            ->willSetLastInsertId(...$expecteds);
+            ->query($query);
+        call_user_func_array([$im, 'willSetLastInsertId'], $expecteds);
         foreach ($expecteds as $expected) {
             $actual = $this->db->query($query);
             $this->assertSame($expected, $actual);
@@ -306,7 +306,7 @@ class MockTraitIntegrationTest extends Testcase
     {
         $instance = NULL;
         $this->db = $this->createPartialMock(
-            DatabaseDriverInterface::class,
+            'Cz\PHPUnit\MockDB\DatabaseDriverInterface',
             ['setMockObject', 'query']
         );
         $this->db->expects($this->any())

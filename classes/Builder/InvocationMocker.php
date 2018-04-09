@@ -82,14 +82,13 @@ class InvocationMocker
      * @param   callable  $nextCallbacks ...
      * @return  $this
      */
-    public function willInvokeCallback(callable $callback, ...$nextCallbacks)
+    public function willInvokeCallback(callable $callback)
     {
         return $this->createStub(
             function ($argument) {
                 return new InvokeCallbackStub($argument);
             },
-            $callback,
-            $nextCallbacks
+            func_get_args()
         );
     }
 
@@ -98,14 +97,13 @@ class InvocationMocker
      * @param   mixed  $nextSets ...
      * @return  $this
      */
-    public function willReturnResultSet($resultSet, ...$nextSets)
+    public function willReturnResultSet($resultSet)
     {
         return $this->createStub(
             function ($argument) {
                 return new ReturnResultSetStub($argument);
             },
-            $resultSet,
-            $nextSets
+            func_get_args()
         );
     }
 
@@ -114,14 +112,13 @@ class InvocationMocker
      * @param   integer  $nextCounts ...
      * @return  $this
      */
-    public function willSetAffectedRows($count, ...$nextCounts)
+    public function willSetAffectedRows($count)
     {
         return $this->createStub(
             function ($argument) {
                 return new SetAffectedRowsStub($argument);
             },
-            $count,
-            $nextCounts
+            func_get_args()
         );
     }
 
@@ -130,14 +127,13 @@ class InvocationMocker
      * @param   mixed  $nextValues ...
      * @return  $this
      */
-    public function willSetLastInsertId($value, ...$nextValues)
+    public function willSetLastInsertId($value)
     {
         return $this->createStub(
             function ($argument) {
                 return new SetLastInsertIdStub($argument);
             },
-            $value,
-            $nextValues
+            func_get_args()
         );
     }
 
@@ -146,34 +142,31 @@ class InvocationMocker
      * @param   Exception  $nextExceptions ...
      * @return  $this
      */
-    public function willThrowException(Exception $exception, ...$nextExceptions)
+    public function willThrowException(Exception $exception)
     {
         return $this->createStub(
             function ($argument) {
                 return new ThrowExceptionStub($argument);
             },
-            $exception,
-            $nextExceptions
+            func_get_args()
         );
     }
 
     /**
      * @param   callable  $callback
-     * @param   mixed     $argument
-     * @param   array     $nextArguments
+     * @param   array     $arguments
      * @return  $this
      */
-    private function createStub(callable $callback, $argument, array $nextArguments)
+    private function createStub(callable $callback, array $arguments)
     {
-        if ( ! $nextArguments) {
-            return $this->will($callback($argument));
+        if (count($arguments) === 1) {
+            return $this->will(
+                $callback(reset($arguments))
+            );
         }
         return $this->will(
             new ConsecutiveCallsStub(
-                array_map(
-                    $callback,
-                    array_merge([$argument], $nextArguments)
-                )
+                array_map($callback, $arguments)
             )
         );
     }

@@ -33,14 +33,14 @@ class ConsecutiveCallsStubTest extends Testcase
         return [
             [
                 [],
-                $this->createMock(Stub::class),
+                $this->createMock('Cz\PHPUnit\MockDB\Stub'),
             ],
             [
                 [
-                    $this->createMock(Stub::class),
-                    $this->createMock(Stub::class),
+                    $this->createMock('Cz\PHPUnit\MockDB\Stub'),
+                    $this->createMock('Cz\PHPUnit\MockDB\Stub'),
                 ],
-                $this->createMock(Stub::class),
+                $this->createMock('Cz\PHPUnit\MockDB\Stub'),
             ],
         ];
     }
@@ -54,7 +54,7 @@ class ConsecutiveCallsStubTest extends Testcase
         foreach ($invocations as $invocation) {
             if ($invocation instanceof Exception) {
                 $this->expectExceptionObject($invocation);
-                $invocation = $this->createMock(Invocation::class);
+                $invocation = $this->createMock('Cz\PHPUnit\MockDB\Invocation');
             }
             $object->invoke($invocation);
         }
@@ -91,7 +91,7 @@ class ConsecutiveCallsStubTest extends Testcase
 
     private function createStub($method, $argument)
     {
-        $stub = $this->createMock(Stub::class);
+        $stub = $this->createMock('Cz\PHPUnit\MockDB\Stub');
         $stub->expects($this->once())
             ->method('invoke')
             ->willReturnCallback(function (Invocation $invocation) use ($method, $argument) {

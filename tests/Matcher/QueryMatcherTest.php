@@ -18,12 +18,12 @@ class QueryMatcherTest extends Testcase
      */
     public function testMatches($query, $expected)
     {
-        $constraint = $this->createMock(Constraint::class);
+        $constraint = $this->createMock('PHPUnit_Framework_Constraint');
         $constraint->expects($this->once())
             ->method('evaluate')
             ->with($query, '', TRUE)
             ->willReturn($expected);
-        $invocation = $this->createMock(BaseInvocation::class);
+        $invocation = $this->createMock('Cz\PHPUnit\MockDB\Invocation');
         $invocation->expects($this->once())
             ->method('getQuery')
             ->willReturn($query);

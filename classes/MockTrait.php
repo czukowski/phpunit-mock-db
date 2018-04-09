@@ -14,12 +14,17 @@ use Cz\PHPUnit\MockDB\MockObject\MockWrapper,
 trait MockTrait
 {
     /**
+     * @var  array  Mock[]
+     */
+    private $mockObjects = [];
+
+    /**
      * @return  Mock
      */
     public function createDatabaseMock()
     {
         $mock = new Mock;
-        $this->registerMockObject(new MockWrapper($mock));
+        $this->mockObjects[] = $mock;
         $this->getDatabaseDriver()
             ->setMockObject($mock);
         return $mock;
@@ -36,7 +41,25 @@ trait MockTrait
     }
 
     /**
-     * @param  MockObject  $mockObject
+     * Reset registered mock objects after running test.
      */
-    abstract public function registerMockObject(MockObject $mockObject);
+    public function runBare()
+    {
+        parent::runBare();
+        $this->mockObjects = [];
+    }
+
+    /**
+     * Verify DB mock objects ().
+     */
+    protected function verifyMockObjects()
+    {
+        parent::verifyMockObjects();
+        foreach ($this->mockObjects as $mockObject) {
+            if ($mockObject->getInvocationMocker()->hasMatchers()) {
+                $this->addToAssertionCount(1);
+            }
+            $mockObject->verify();
+        }
+    }
 }

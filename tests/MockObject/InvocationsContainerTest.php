@@ -21,7 +21,7 @@ class InvocationsContainerTest extends Testcase
         $previousInvocations = [];
         foreach ($invocations as $invocation) {
             $wrappedInvocation = $object->getMockObjectInvocation($invocation);
-            $this->assertInstanceOf(InvocationWrapper::class, $wrappedInvocation);
+            $this->assertInstanceOf('Cz\PHPUnit\MockDB\MockObject\InvocationWrapper', $wrappedInvocation);
             $sameWrappedInvocation = $object->getMockObjectInvocation($invocation);
             $this->assertSame($wrappedInvocation, $sameWrappedInvocation);
             foreach ($previousInvocations as $previousWrappedInvocation) {
@@ -44,7 +44,7 @@ class InvocationsContainerTest extends Testcase
         return [
             array_map(
                 function () {
-                    return $this->createMock(BaseInvocation::class);
+                    return $this->createMock('Cz\PHPUnit\MockDB\Invocation');
                 },
                 array_fill(0, $invocationsCount, NULL)
             ),
