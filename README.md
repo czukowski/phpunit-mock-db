@@ -25,6 +25,11 @@ tested code must be used, which implements both `Cz\PHPUnit\MockDB\DatabaseDrive
 interface and that of the database abstraction layer's, additionally `getDatabaseDriver` method
 must be implemented by the test case class, that returns an instance of that driver.
 
+Note: this trait doesn't consider more than one database connection to be in use. If it is required
+to have multiple database connections mocked, a custom implementation should be used instead, that
+either picks a correct database instance to assign the mock instance to, or one that doesn't assign
+the mock instance to anywhere and leaves it up to the test method.
+
 ### Examples:
 
 Return a pre-defined result set on _any_ database query:
