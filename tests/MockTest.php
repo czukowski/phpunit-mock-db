@@ -80,6 +80,7 @@ class MockTest extends Testcase
     public function testInvoke($query, $expected)
     {
         $invocationMocker = new Doubles\InvocationMockerDouble;
+        $invocationMocker->setRequireMatch(FALSE);
         $object = new Doubles\MockDouble($invocationMocker);
 
         $actual = $object->invoke($query);
@@ -115,5 +116,39 @@ class MockTest extends Testcase
     {
         $invocation = new QueryInvocation($query);
         return [$invocation, $invocation];
+    }
+
+    /**
+     * @dataProvider  provideRequireMatch
+     */
+    public function testGetRequireMatch($value)
+    {
+        $invocationMocker = new Doubles\InvocationMockerDouble;
+        $invocationMocker->setRequireMatch($value);
+        $object = new Doubles\MockDouble($invocationMocker);
+
+        $actual = $object->getRequireMatch();
+        $this->assertSame($value, $actual);
+    }
+
+    /**
+     * @dataProvider  provideRequireMatch
+     */
+    public function testSetRequireMatch($value)
+    {
+        $invocationMocker = new Doubles\InvocationMockerDouble;
+        $object = new Doubles\MockDouble($invocationMocker);
+
+        $actual = $object->setRequireMatch($value);
+        $this->assertSame($object, $actual);
+        $this->assertSame($value, $invocationMocker->getRequireMatch());
+    }
+
+    public function provideRequireMatch()
+    {
+        return [
+            [TRUE],
+            [FALSE],
+        ];
     }
 }

@@ -87,7 +87,7 @@ class InvocationMockerTest extends Testcase
     public function testGetRequireMatch($value)
     {
         $object = $this->createObject();
-        $this->assertFalse($object->getRequireMatch());
+        $this->assertTrue($object->getRequireMatch());
         $requireMatch = new ReflectionProperty(InvocationMocker::class, 'requireMatch');
         $requireMatch->setAccessible(TRUE);
         $requireMatch->setValue($object, $value);

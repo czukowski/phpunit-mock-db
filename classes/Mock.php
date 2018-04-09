@@ -101,11 +101,13 @@ class Mock
     }
 
     /**
-     * @param  boolean  $value
+     * @param   boolean  $value
+     * @return  $this
      */
     public function setRequireMatch(bool $value)
     {
         $this->getInvocationMocker()
             ->setRequireMatch($value);
+        return $this;
     }
 }

@@ -144,6 +144,15 @@ $mock->expects($this->any())
     });
 ```
 
+By default, mock object is set to throw an exception if an unknown (unmatched) query is executed,
+but this can be disabled:
+
+```php
+$mock = $this->createDatabaseMock()
+$mock->setRequireMatch(FALSE)
+    ->expects(...)
+```
+
 License
 -------
 

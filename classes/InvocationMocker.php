@@ -22,7 +22,7 @@ class InvocationMocker implements MatcherCollection, Invokable
     /**
      * @var  boolean
      */
-    private $requireMatch = FALSE;
+    private $requireMatch = TRUE;
 
     /**
      * @param  MatcherInvocation  $matcher
