@@ -153,9 +153,8 @@ By default, mock object is set to throw an exception if an unknown (unmatched) q
 but this can be disabled:
 
 ```php
-$mock = $this->createDatabaseMock()
-$mock->setRequireMatch(FALSE)
-    ->expects(...)
+$mock = $this->createDatabaseMock();
+$mock->setRequireMatch(FALSE);
 ```
 
 License
