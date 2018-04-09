@@ -36,7 +36,7 @@ class SetAffectedRowsStub implements Stub
     /**
      * @return  string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'set affected rows count';
     }

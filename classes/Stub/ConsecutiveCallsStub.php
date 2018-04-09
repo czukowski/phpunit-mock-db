@@ -61,7 +61,7 @@ class ConsecutiveCallsStub implements Stub
     /**
      * @return  boolean
      */
-    public function toString()
+    public function toString(): string
     {
         if ($this->current) {
             return $this->current->toString();

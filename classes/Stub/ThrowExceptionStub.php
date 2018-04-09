@@ -37,7 +37,7 @@ class ThrowExceptionStub implements Stub
     /**
      * @return  string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'throw exception';
     }

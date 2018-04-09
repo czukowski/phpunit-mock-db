@@ -28,7 +28,7 @@ class QueryMatcher implements Invocation
     /**
      * @return  string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'query '.$this->constraint->toString();
     }
