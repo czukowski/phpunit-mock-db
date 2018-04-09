@@ -2,7 +2,7 @@
 namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\Invocation as MockDBInvocation,
-    PHPUnit\Framework\MockObject\Invocation as MockObjectBaseInvocation;
+    PHPUnit_Framework_MockObject_Invocation as MockObjectBaseInvocation;
 
 /**
  * InvocationWrapper
@@ -28,7 +28,7 @@ class InvocationWrapper implements MockObjectBaseInvocation
     /**
      * @return  string
      */
-    public function getClassName(): string
+    public function getClassName()
     {
         return '';
     }
@@ -36,7 +36,7 @@ class InvocationWrapper implements MockObjectBaseInvocation
     /**
      * @return  string
      */
-    public function getMethodName(): string
+    public function getMethodName()
     {
         return '';
     }
@@ -44,7 +44,7 @@ class InvocationWrapper implements MockObjectBaseInvocation
     /**
      * @return  array
      */
-    public function getParameters(): array
+    public function getParameters()
     {
         return [];
     }
@@ -52,7 +52,7 @@ class InvocationWrapper implements MockObjectBaseInvocation
     /**
      * @return  string
      */
-    public function getReturnType(): string
+    public function getReturnType()
     {
         return '';
     }
@@ -60,7 +60,7 @@ class InvocationWrapper implements MockObjectBaseInvocation
     /**
      * @return  boolean
      */
-    public function isReturnTypeNullable(): bool
+    public function isReturnTypeNullable()
     {
         return TRUE;
     }

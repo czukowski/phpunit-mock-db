@@ -6,8 +6,8 @@ use Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
     Cz\PHPUnit\SQL\EqualsSQLQueriesConstraint,
-    PHPUnit\Framework\Constraint\Constraint,
-    PHPUnit\Framework\ExpectationFailedException;
+    PHPUnit_Framework_Constraint as Constraint,
+    PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 
 /**
  * MatcherTest

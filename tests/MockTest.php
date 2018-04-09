@@ -6,7 +6,7 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
-    PHPUnit\Framework\Exception as FrameworkException;
+    PHPUnit_Framework_Exception as FrameworkException;
 
 /**
  * MockTest

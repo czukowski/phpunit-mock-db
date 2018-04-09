@@ -6,9 +6,9 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
-    PHPUnit\Framework\Exception,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation,
-    PHPUnit\Util\InvalidArgumentHelper;
+    PHPUnit_Framework_Exception as Exception,
+    PHPUnit_Framework_MockObject_Matcher_Invocation as MockObjectMatcherInvocation,
+    PHPUnit_Util_InvalidArgumentHelper as InvalidArgumentHelper;
 
 /**
  * Mock
@@ -94,7 +94,7 @@ class Mock
     /**
      * @return  boolean
      */
-    public function getRequireMatch(): bool
+    public function getRequireMatch()
     {
         return $this->getInvocationMocker()
             ->getRequireMatch();
@@ -104,7 +104,7 @@ class Mock
      * @param   boolean  $value
      * @return  $this
      */
-    public function setRequireMatch(bool $value)
+    public function setRequireMatch($value)
     {
         $this->getInvocationMocker()
             ->setRequireMatch($value);

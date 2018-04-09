@@ -21,8 +21,8 @@ abstract class Testcase extends MockDB\Testcase
     protected function assertConsecutiveStubs(
         Stub $stub,
         array $expectedItems,
-        string $expectedInstanceOf,
-        string $attribute
+        $expectedInstanceOf,
+        $attribute
     ) {
         $this->assertInstanceOf(Stub\ConsecutiveCallsStub::class, $stub);
         $stack = $this->getObjectAttribute($stub, 'stack');
@@ -41,8 +41,8 @@ abstract class Testcase extends MockDB\Testcase
      */
     protected function assertStub(
         Stub $stub,
-        string $expectedInstanceOf,
-        string $attribute,
+        $expectedInstanceOf,
+        $attribute,
         $expectedAttribute
     ) {
         $this->assertInstanceOf($expectedInstanceOf, $stub);

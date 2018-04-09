@@ -2,9 +2,9 @@
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Stub,
-    PHPUnit\Framework\ExpectationFailedException,
+    PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException,
     RuntimeException,
-    Throwable;
+    Exception;
 
 /**
  * MockIntegrationTest
@@ -55,14 +55,14 @@ class MockIntegrationTest extends Testcase
             try {
                 $invocation = $mock->invoke($options['invoke']);
             }
-            catch (Throwable $e) {
-                if ( ! $options['expected'] instanceof Throwable) {
+            catch (Exception $e) {
+                if ( ! $options['expected'] instanceof Exception) {
                     throw $e;
                 }
                 $this->assertInstanceOf(get_class($options['expected']), $e);
                 continue;
             }
-            if ($options['expected'] instanceof Throwable) {
+            if ($options['expected'] instanceof Exception) {
                 $this->fail('Expected exception not thrown');
             }
             $actual = $invocation->{$options['result']}();

@@ -3,9 +3,9 @@ namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
-    PHPUnit\Framework\MockObject\Matcher\AnyInvokedCount,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation,
-    PHPUnit\Framework\MockObject\Matcher\InvokedCount;
+    PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount as AnyInvokedCount,
+    PHPUnit_Framework_MockObject_Matcher_Invocation as MockObjectMatcherInvocation,
+    PHPUnit_Framework_MockObject_Matcher_InvokedCount as InvokedCount;
 
 /**
  * MatcherInvocationWrapper

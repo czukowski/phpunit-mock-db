@@ -3,7 +3,7 @@ namespace Cz\PHPUnit\MockDB\Matcher;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
     Cz\PHPUnit\MockDB\Testcase,
-    PHPUnit\Framework\Constraint\Constraint;
+    PHPUnit_Framework_Constraint as Constraint;
 
 /**
  * QueryMatcherTest

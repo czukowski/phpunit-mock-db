@@ -1,7 +1,7 @@
 <?php
 namespace Cz\PHPUnit\MockDB;
 
-use PHPUnit\Framework\SelfDescribing;
+use PHPUnit_Framework_SelfDescribing as SelfDescribing;
 
 /**
  * Stub

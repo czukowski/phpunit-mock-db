@@ -13,8 +13,8 @@ use Cz\PHPUnit\MockDB\Matcher,
     Cz\PHPUnit\MockDB\Stub\SetLastInsertIdStub,
     Cz\PHPUnit\MockDB\Stub\ThrowExceptionStub,
     Cz\PHPUnit\SQL\EqualsSQLQueriesConstraint,
-    PHPUnit\Framework\Constraint\Constraint,
-    Throwable;
+    PHPUnit_Framework_Constraint as Constraint,
+    Exception;
 
 /**
  * InvocationMocker
@@ -142,11 +142,11 @@ class InvocationMocker
     }
 
     /**
-     * @param   Throwable  $exception
-     * @param   Throwable  $nextExceptions ...
+     * @param   Exception  $exception
+     * @param   Exception  $nextExceptions ...
      * @return  $this
      */
-    public function willThrowException(Throwable $exception, ...$nextExceptions)
+    public function willThrowException(Exception $exception, ...$nextExceptions)
     {
         return $this->createStub(
             function ($argument) {

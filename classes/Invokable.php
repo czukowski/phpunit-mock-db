@@ -1,7 +1,7 @@
 <?php
 namespace Cz\PHPUnit\MockDB;
 
-use PHPUnit\Framework\MockObject\Verifiable;
+use PHPUnit_Framework_MockObject_Verifiable as Verifiable;
 
 /**
  * Invokable

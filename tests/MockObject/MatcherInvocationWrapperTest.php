@@ -3,7 +3,7 @@ namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
     Cz\PHPUnit\MockDB\Testcase,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation;
+    PHPUnit_Framework_MockObject_Matcher_Invocation as MockObjectMatcherInvocation;
 
 /**
  * MatcherInvocationWrapperTest

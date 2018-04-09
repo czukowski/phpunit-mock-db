@@ -3,9 +3,9 @@ namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\InvocationMocker,
     Cz\PHPUnit\MockDB\Mock,
-    PHPUnit\Framework\ExpectationFailedException,
-    PHPUnit\Framework\MockObject\Matcher\Invocation,
-    PHPUnit\Framework\MockObject\MockObject,
+    PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException,
+    PHPUnit_Framework_MockObject_Matcher_Invocation as Invocation,
+    PHPUnit_Framework_MockObject_MockObject as MockObject,
     LogicException;
 
 /**

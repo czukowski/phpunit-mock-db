@@ -5,7 +5,7 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Stub\MatcherCollection,
-    PHPUnit\Framework\ExpectationFailedException;
+    PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 
 /**
  * InvocationMocker
@@ -43,7 +43,7 @@ class InvocationMocker implements MatcherCollection, Invokable
     /**
      * @return  boolean
      */
-    public function getRequireMatch(): bool
+    public function getRequireMatch()
     {
         return $this->requireMatch;
     }
@@ -51,7 +51,7 @@ class InvocationMocker implements MatcherCollection, Invokable
     /**
      * @param  boolean  $value
      */
-    public function setRequireMatch(bool $value)
+    public function setRequireMatch($value)
     {
         $this->requireMatch = $value;
     }

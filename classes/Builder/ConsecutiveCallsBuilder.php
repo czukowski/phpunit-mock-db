@@ -8,7 +8,7 @@ use Cz\PHPUnit\MockDB\Stub,
     Cz\PHPUnit\MockDB\Stub\SetAffectedRowsStub,
     Cz\PHPUnit\MockDB\Stub\SetLastInsertIdStub,
     Cz\PHPUnit\MockDB\Stub\ThrowExceptionStub,
-    Throwable;
+    Exception;
 
 /**
  * ConsecutiveCallsBuilder
@@ -92,10 +92,10 @@ class ConsecutiveCallsBuilder
     }
 
     /**
-     * @param   Throwable  $exception
+     * @param   Exception  $exception
      * @return  $this
      */
-    public function willThrowException(Throwable $exception)
+    public function willThrowException(Exception $exception)
     {
         return $this->will(new ThrowExceptionStub($exception));
     }

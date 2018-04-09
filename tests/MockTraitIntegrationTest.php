@@ -3,9 +3,9 @@ namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Invocation,
     LogicException,
-    PHPUnit\Framework\Exception,
+    PHPUnit_Framework_Exception as FrameworkException,
     RuntimeException,
-    Throwable;
+    Exception;
 
 /**
  * MockTraitIntegrationTest
@@ -233,8 +233,8 @@ class MockTraitIntegrationTest extends Testcase
             $this->db->query($query);
             $this->fail('Expected exception');
         }
-        catch (Throwable $e) {
-            if ($e instanceof Exception) {
+        catch (Exception $e) {
+            if ($e instanceof FrameworkException) {
                 throw $e;
             }
             $this->assertInstanceOf(get_class($exception), $e);

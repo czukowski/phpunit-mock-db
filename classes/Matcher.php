@@ -4,7 +4,7 @@ namespace Cz\PHPUnit\MockDB;
 use Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Matcher\QueryMatcher,
-    PHPUnit\Framework\ExpectationFailedException,
+    PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException,
     RuntimeException;
 
 /**

@@ -3,7 +3,7 @@ namespace Cz\PHPUnit\MockDB\Stub;
 
 use Cz\PHPUnit\MockDB\Invocation,
     Cz\PHPUnit\MockDB\Stub,
-    PHPUnit\Framework\MockObject\RuntimeException,
+    PHPUnit_Framework_MockObject_RuntimeException as RuntimeException,
     Exception;
 
 /**

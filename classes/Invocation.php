@@ -12,7 +12,7 @@ interface Invocation
     /**
      * @return  string
      */
-    function getQuery(): string;
+    function getQuery();
 
     /**
      * @return  integer|NULL
@@ -22,7 +22,7 @@ interface Invocation
     /**
      * @param  integer  $count
      */
-    function setAffectedRows(int $count);
+    function setAffectedRows($count);
 
     /**
      * @return  mixed|NULL

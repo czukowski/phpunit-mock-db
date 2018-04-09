@@ -2,7 +2,7 @@
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\MockObject\MockWrapper,
-    PHPUnit\Framework\MockObject\MockObject,
+    PHPUnit_Framework_MockObject_MockObject as MockObject,
     LogicException;
 
 /**

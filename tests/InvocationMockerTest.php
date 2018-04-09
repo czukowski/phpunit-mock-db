@@ -4,7 +4,7 @@ namespace Cz\PHPUnit\MockDB;
 use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
-    PHPUnit\Framework\ExpectationFailedException,
+    PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException,
     ReflectionProperty;
 
 /**
@@ -250,7 +250,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createVerifyTestCase(int $matchersCount)
+    private function createVerifyTestCase($matchersCount)
     {
         return [
             array_map(

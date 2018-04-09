@@ -31,7 +31,7 @@ class QueryInvocation implements Invocation
     /**
      * @param  string  $query
      */
-    public function __construct(string $query)
+    public function __construct($query)
     {
         $this->query = $query;
     }
@@ -39,7 +39,7 @@ class QueryInvocation implements Invocation
     /**
      * @return  string
      */
-    public function getQuery(): string
+    public function getQuery()
     {
         return $this->query;
     }
@@ -55,7 +55,7 @@ class QueryInvocation implements Invocation
     /**
      * @param  integer  $count
      */
-    public function setAffectedRows(int $count)
+    public function setAffectedRows($count)
     {
         $this->affectedRows = $count;
     }

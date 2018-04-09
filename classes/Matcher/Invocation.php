@@ -2,8 +2,8 @@
 namespace Cz\PHPUnit\MockDB\Matcher;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
-    PHPUnit\Framework\MockObject\Verifiable,
-    PHPUnit\Framework\SelfDescribing;
+    PHPUnit_Framework_MockObject_Verifiable as Verifiable,
+    PHPUnit_Framework_SelfDescribing as SelfDescribing;
 
 /**
  * Invocation

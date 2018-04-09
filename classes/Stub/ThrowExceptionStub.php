@@ -3,7 +3,7 @@ namespace Cz\PHPUnit\MockDB\Stub;
 
 use Cz\PHPUnit\MockDB\Invocation,
     Cz\PHPUnit\MockDB\Stub,
-    Throwable;
+    Exception;
 
 /**
  * ThrowExceptionStub
@@ -14,14 +14,14 @@ use Cz\PHPUnit\MockDB\Invocation,
 class ThrowExceptionStub implements Stub
 {
     /**
-     * @var  Throwable
+     * @var  Exception
      */
     private $exception;
 
     /**
-     * @param  Throwable  $exception
+     * @param  Exception  $exception
      */
-    public function __construct(Throwable $exception)
+    public function __construct(Exception $exception)
     {
         $this->exception = $exception;
     }

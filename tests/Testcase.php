@@ -2,7 +2,7 @@
 namespace Cz\PHPUnit\MockDB;
 
 use Exception,
-    PHPUnit\Framework\TestCase as FrameworkTestCase;
+    PHPUnit_Framework_TestCase as FrameworkTestCase;
 
 /**
  * Testcase
@@ -20,5 +20,19 @@ abstract class Testcase extends FrameworkTestCase
         if ($expected instanceof Exception) {
             $this->expectException(get_class($expected));
         }
+    }
+
+    /**
+     * Backported from higher version of PHPUnit.
+     * 
+     * @copyright  (c) Sebastian Bergmann <sebastian@phpunit.de>
+     * 
+     * @param  Exception  $exception
+     */
+    public function expectExceptionObject(Exception $exception)
+    {
+        $this->expectException(get_class($exception));
+        $this->expectExceptionMessage($exception->getMessage());
+        $this->expectExceptionCode($exception->getCode());
     }
 }

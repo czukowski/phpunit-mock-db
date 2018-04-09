@@ -1,8 +1,8 @@
 <?php
 namespace Cz\PHPUnit\MockDB;
 
-use PHPUnit\Framework\TestFailure as FrameworkTestFailure,
-    Throwable;
+use PHPUnit_Framework_TestFailure as FrameworkTestFailure,
+    Exception;
 
 /**
  * TestFailure
@@ -13,10 +13,10 @@ use PHPUnit\Framework\TestFailure as FrameworkTestFailure,
 class TestFailure
 {
     /**
-     * @param   Throwable  $error
+     * @param   Exception  $error
      * @return  string
      */
-    public static function exceptionToString(Throwable $error)
+    public static function exceptionToString(Exception $error)
     {
         $message = FrameworkTestFailure::exceptionToString($error);
         return preg_replace('#^Method#', 'Database', $message);

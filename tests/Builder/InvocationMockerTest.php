@@ -8,8 +8,8 @@ use Cz\PHPUnit\MockDB\Matcher,
     Cz\PHPUnit\MockDB\Stub\ConsecutiveCallsStub,
     Cz\PHPUnit\SQL\EqualsSQLQueriesConstraint,
     ArrayObject,
-    PHPUnit\Framework\Constraint\Constraint,
-    PHPUnit\Framework\Constraint\StringStartsWith,
+    PHPUnit_Framework_Constraint as Constraint,
+    PHPUnit_Framework_Constraint_StringStartsWith as StringStartsWith,
     RuntimeException;
 
 /**
