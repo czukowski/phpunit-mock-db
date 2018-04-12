@@ -24,7 +24,7 @@ class KeywordBasedQueryInvocationFactory implements QueryInvocationFactoryInterf
         $keyword = $this->getKeyword($trimmed);
         if ($keyword) {
             $invocation = new QueryInvocation($trimmed);
-            if (in_array($keyword, ['UPDATE'], TRUE)) {
+            if (in_array($keyword, ['UPDATE', 'DELETE'], TRUE)) {
                 $invocation->setAffectedRows(0);
             }
             elseif (in_array($keyword, ['INSERT', 'REPLACE'], TRUE)) {
