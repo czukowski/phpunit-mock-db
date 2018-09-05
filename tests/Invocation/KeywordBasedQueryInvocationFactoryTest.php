@@ -30,6 +30,7 @@ class KeywordBasedQueryInvocationFactoryTest extends Testcase
     {
         return [
             $this->createCreateInvocationTestCaseForUpdateKeyword('UPDATE `t1` SET `name` = "foo"'),
+            $this->createCreateInvocationTestCaseForUpdateKeyword('DELETE FROM `t1`'),
             $this->createCreateInvocationTestCaseForInsertKeyword('INSERT INTO `t1` SELECT * FROM `t2`'),
             $this->createCreateInvocationTestCaseForInsertKeyword('REPLACE INTO `t1` VALUES ("foo", "bar")'),
             $this->createCreateInvocationTestCaseForSelectKeyword('SELECT * FROM `t`'),
