@@ -3,7 +3,8 @@ namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Invocation,
     LogicException,
-    PHPUnit\Framework\Exception,
+    PHPUnit\Framework\Constraint\Constraint,
+    PHPUnit\Framework\Exception as FrameworkException,
     RuntimeException,
     Throwable;
 
@@ -25,9 +26,11 @@ class MockTraitIntegrationTest extends Testcase
     private $db;
 
     /**
+     * Expect any query producing a result set, zero or more times. Invoke a query once.
+     * 
      * @dataProvider  provideMatchSingleSelectInvocation
      */
-    public function testMatchAnyQueryAnyInvocationCount($query, $expected)
+    public function testMatchAnyQueryAnyInvocationCount(string $query, array $expected)
     {
         $this->createDatabaseMock()
             ->expects($this->any())
@@ -37,9 +40,11 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect any single query producing a result set. Invoke once.
+     * 
      * @dataProvider  provideMatchSingleSelectInvocation
      */
-    public function testMatchAnyQuerySingleInvocation($query, $expected)
+    public function testMatchAnyQuerySingleInvocation(string $query, array $expected)
     {
         $this->createDatabaseMock()
             ->expects($this->once())
@@ -49,9 +54,11 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect any query producing a result set, zero or more times. Do not invoke any.
+     * 
      * @dataProvider  provideMatchSingleSelectInvocation
      */
-    public function testMatchAnyQueryAnyInvocationCountNoneInvoked($_, $expected)
+    public function testMatchAnyQueryAnyInvocationCountNoneInvoked($_, array $expected)
     {
         $this->createDatabaseMock()
             ->expects($this->any())
@@ -69,10 +76,17 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect two different queries producing result sets, each executed once, regardless of the order.
+     * Invoke both once, starting with the 2nd query.
+     * 
      * @dataProvider  provideMatchTwoSelectInvocations
      */
-    public function testMatchWithQueryMatchersOnceEach($query1, $expected1, $query2, $expected2)
-    {
+    public function testMatchWithQueryMatchersOnceEach(
+        string $query1,
+        array $expected1,
+        string $query2,
+        array $expected2
+    ) {
         $mock = $this->createDatabaseMock();
         $mock->expects($this->once())
             ->query($query1)
@@ -80,6 +94,7 @@ class MockTraitIntegrationTest extends Testcase
         $mock->expects($this->once())
             ->query($query2)
             ->willReturnResultSet($expected2);
+
         // Invoke in reverse order.
         $actual2 = $this->db->query($query2);
         $this->assertSame($expected2, $actual2);
@@ -100,10 +115,20 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect two queries producing insert IDs executed as 2nd and 3rd queries, and also
+     * a query producing a result set executed once at any position. Invoke select query,
+     * then both insert queries in the correct order.
+     * 
      * @dataProvider  provideMatchMixedQueriesWithQueryMatchersOnceEach
      */
-    public function testMatchMixedQueriesWithQueryMatchersOnceEach($query1, $expected1, $query2, $expected2, $query3, $expected3)
-    {
+    public function testMatchMixedQueriesWithQueryMatchersOnceEach(
+        string $query1,
+        array $expected1,
+        string $query2,
+        int $expected2,
+        string $query3,
+        int $expected3
+    ) {
         $mock = $this->createDatabaseMock();
         $mock->expects($this->at(1))
             ->query($query2)
@@ -114,6 +139,7 @@ class MockTraitIntegrationTest extends Testcase
         $mock->expects($this->once())
             ->query($query1)
             ->willReturnResultSet($expected1);
+
         $actual1 = $this->db->query($query1);
         $this->assertSame($expected1, $actual1);
         $actual2 = $this->db->query($query2);
@@ -137,14 +163,17 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect a series of consequent queries producing insert IDs. Invoke all of then in order.
+     * 
      * @dataProvider  provideMatchWithQueryMatchersWithConsecutiveCalls
      */
-    public function testMatchWithQueryMatchersWithConsecutiveCalls($query, $expecteds)
+    public function testMatchWithQueryMatchersWithConsecutiveCalls(string $query, array $expecteds)
     {
         $this->createDatabaseMock()
             ->expects($this->exactly(count($expecteds)))
             ->query($query)
             ->willSetLastInsertId(...$expecteds);
+
         foreach ($expecteds as $expected) {
             $actual = $this->db->query($query);
             $this->assertSame($expected, $actual);
@@ -162,18 +191,25 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect a query producing a number of affected rows to be executed repeatedly
+     * exactly specified amount of times. Invoke as specified.
+     * 
      * @dataProvider  provideMatchWithQueryMatcherAssertAffectedRows
      */
-    public function testMatchWithQueryMatcherAssertAffectedRows($expectTimes, $query, $expected)
-    {
+    public function testMatchWithQueryMatcherAssertAffectedRows(
+        int $expectTimes,
+        string $query,
+        int $expected
+    ) {
         $this->createDatabaseMock()
             ->expects($this->exactly($expectTimes))
             ->query($query)
             ->willSetAffectedRows($expected);
-        $actual1 = $this->db->query($query);
-        $this->assertSame($expected, $actual1);
-        $actual2 = $this->db->query($query);
-        $this->assertSame($expected, $actual2);
+
+        for ($i = 0; $i < $expectTimes; $i++) {
+            $actual = $this->db->query($query);
+            $this->assertSame($expected, $actual);
+        }
     }
 
     public function provideMatchWithQueryMatcherAssertAffectedRows()
@@ -188,10 +224,16 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect a query producing a result set executed once, while being validated against
+     * a specified native PHPUnit constraint. Invoke passed query once.
+     * 
      * @dataProvider  provideMatchQueryWithPHPUnitConstraint
      */
-    public function testMatchQueryWithPHPUnitConstraint($constraint, $query, $expected)
-    {
+    public function testMatchQueryWithPHPUnitConstraint(
+        Constraint $constraint,
+        string $query,
+        array $expected
+    ) {
         $this->createDatabaseMock()
             ->expects($this->once())
             ->query($constraint)
@@ -212,10 +254,17 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect a query producing a series of consequent queries producing insert IDs using consecutive calls
+     * builder in a way that the 1st and 2nd invocations succeed, 3rd invocation throws an exception and the
+     * 4th invocation succeed again. Invoke a passed query four times and check the correct result each time.
+     * 
      * @dataProvider  provideMatchWithQueryMatchersWithConsecutiveCallsBuilder
      */
-    public function testMatchWithQueryMatchersWithConsecutiveCallsBuilder($query, $exception, $expecteds)
-    {
+    public function testMatchWithQueryMatchersWithConsecutiveCallsBuilder(
+        string $query,
+        Throwable $exception,
+        array $expecteds
+    ) {
         $queue = $expecteds;
         $this->createDatabaseMock()
             ->expects($this->atLeast(count($expecteds) + 1))
@@ -225,20 +274,24 @@ class MockTraitIntegrationTest extends Testcase
             ->willSetLastInsertId(array_shift($queue))
             ->willThrowException($exception)
             ->willSetLastInsertId(array_shift($queue));
+
         $actual0 = $this->db->query($query);
         $this->assertSame($expecteds[0], $actual0);
+
         $actual1 = $this->db->query($query);
         $this->assertSame($expecteds[1], $actual1);
+
         try {
             $this->db->query($query);
             $this->fail('Expected exception');
         }
         catch (Throwable $e) {
-            if ($e instanceof Exception) {
+            if ($e instanceof FrameworkException) {
                 throw $e;
             }
             $this->assertInstanceOf(get_class($exception), $e);
         }
+
         $actual2 = $this->db->query($query);
         $this->assertSame($expecteds[2], $actual2);
     }
@@ -255,14 +308,22 @@ class MockTraitIntegrationTest extends Testcase
     }
 
     /**
+     * Expect a single query and set up passed callback functions to create query result.
+     * Invoke once and check for the correct result.
+     * 
      * @dataProvider  provideMatchWithQueryMatchersWithCustomCallbackHandlers
      */
-    public function testMatchWithQueryMatchersWithCustomCallbackHandlers($constraint, $callback, $query, $expected)
-    {
+    public function testMatchWithQueryMatchersWithCustomCallbackHandlers(
+        Constraint $constraint,
+        callable $callback,
+        string $query,
+        $expected
+    ) {
         $this->createDatabaseMock()
             ->expects($this->once())
             ->query($constraint)
             ->willInvokeCallback($callback);
+
         $actual = $this->db->query($query);
         $this->assertSame($expected, $actual);
     }
