@@ -59,9 +59,13 @@ $this->createDatabaseMock()
 ```
 
 Return a pre-defined result set on each specific database query, expecting each query to be executed
-exactly once (note: the order in which the queries are expected doesn't have to be same as the order
-in which the queries are executed, also note that whitespace will be ignored in queries, so they can
-be loaded from well-formatted files, which could be especially useful for long and complex queries):
+exactly once:
+
+_Note_: the order in which the query expectations are being set up doesn't have to be same as the order
+in which the queries will be executed.
+
+_Also note_: the whitespaces will be ignored in query constraints, so they can be loaded from well-formatted
+files, which could be especially useful for long and complex queries.
 
 ```php
 $mock = $this->createDatabaseMock();
