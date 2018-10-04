@@ -15,7 +15,7 @@ Pick your version! Version numbering follows major PHPUnit version numbers, so f
 PHPUnit N.x, the installation command would look like this:
 
 ```sh
-composer require --dev czukowski/phpunit-mock-db "~N.0"
+composer require czukowski/phpunit-mock-db "~N.0"
 ```
 
 Usage
