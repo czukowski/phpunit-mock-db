@@ -36,7 +36,7 @@ class SetLastInsertIdStub implements Stub
     /**
      * @return  string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'set last insert ID';
     }

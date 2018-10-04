@@ -15,9 +15,8 @@
         "issues": "https://github.com/czukowski/phpunit-mock-db/issues"
     },
     "require": {
-        "czukowski/phpunit-sql": "^6.0",
-        "phpunit/phpunit": "^6.0",
-        "phpunit/phpunit-mock-objects": "^5.0"
+        "czukowski/phpunit-sql": "^7.0",
+        "phpunit/phpunit": "^7.0"
     },
     "autoload": {
         "psr-4": {

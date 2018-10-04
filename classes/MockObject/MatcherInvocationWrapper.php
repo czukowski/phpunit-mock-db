@@ -58,7 +58,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
     /**
      * @return  string
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->invocation->toString();
     }

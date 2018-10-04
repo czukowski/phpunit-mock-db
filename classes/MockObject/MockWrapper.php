@@ -68,6 +68,14 @@ class MockWrapper implements MockObject
     }
 
     /**
+     * @throws  LogicException
+     */
+    public function __phpunit_setReturnValueGeneration(bool $returnValueGeneration)
+    {
+        throw new LogicException('Not supported');
+    }
+
+    /**
      * @param  Invocation  $matcher
      */
     public function expects(Invocation $matcher)

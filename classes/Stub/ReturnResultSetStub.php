@@ -36,7 +36,7 @@ class ReturnResultSetStub implements Stub
     /**
      * @return  string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'return result set';
     }
