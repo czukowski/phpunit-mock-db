@@ -16,7 +16,7 @@
     },
     "require": {
         "php": ">=5.4",
-        "czukowski/phpunit-sql": "^4.0.2",
+        "czukowski/phpunit-sql": "^4.0",
         "phpunit/phpunit": "^4.0"
     },
     "autoload": {
