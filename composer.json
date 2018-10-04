@@ -15,7 +15,6 @@
         "issues": "https://github.com/czukowski/phpunit-mock-db/issues"
     },
     "require": {
-        "php": ">=7.0",
         "czukowski/phpunit-sql": "~6.0",
         "phpunit/phpunit": "~6.0",
         "phpunit/phpunit-mock-objects": "~5.0"
