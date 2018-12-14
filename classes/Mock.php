@@ -81,6 +81,14 @@ class Mock
     }
 
     /**
+     * @return  void
+     */
+    public function unsetInvocationMocker()
+    {
+        $this->invocationMocker = NULL;
+    }
+
+    /**
      * @return  InvocationMocker
      */
     protected function getInvocationsContainer()
