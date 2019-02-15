@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Stub,
@@ -17,7 +18,7 @@ class MockIntegrationTest extends Testcase
     /**
      * @dataProvider  provideMock
      */
-    public function testMock($matchers, $invocations, $willVerify)
+    public function testMock(array $matchers, array $invocations, bool $willVerify): void
     {
         $mock = $this->createObject();
         $this->setupMatchers($mock, $matchers);
@@ -28,7 +29,7 @@ class MockIntegrationTest extends Testcase
         $this->assertNull($mock->verify());  // At the very least, assert this to avoid 'risky' test.
     }
 
-    private function setupMatchers(Mock $mock, array $matchers)
+    private function setupMatchers(Mock $mock, array $matchers): void
     {
         foreach ($matchers as $options) {
             // `$im` is being reassigned multiple times to emulate calls chaining.
@@ -49,7 +50,7 @@ class MockIntegrationTest extends Testcase
         }
     }
 
-    private function callInvocations(Mock $mock, array $invocations)
+    private function callInvocations(Mock $mock, array $invocations): void
     {
         foreach ($invocations as $options) {
             try {
@@ -70,7 +71,7 @@ class MockIntegrationTest extends Testcase
         }
     }
 
-    public function provideMock()
+    public function provideMock(): array
     {
         $resultSet1 = [['foo' => 'bar']];
         $resultSet2 = [['no' => 'way']];
@@ -466,12 +467,12 @@ class MockIntegrationTest extends Testcase
         ];
     }
 
-    private function createExpectationFailedException()
+    private function createExpectationFailedException(): ExpectationFailedException
     {
         return new ExpectationFailedException('');
     }
 
-    private function createObject($requireMatch = TRUE)
+    private function createObject($requireMatch = TRUE): Mock
     {
         $object = new Mock;
         $object->setRequireMatch($requireMatch);

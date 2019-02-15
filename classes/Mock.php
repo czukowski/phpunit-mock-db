@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,

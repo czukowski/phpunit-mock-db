@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Stub;
 
 /**
@@ -12,14 +13,14 @@ class SetLastInsertIdStubTest extends Testcase
     /**
      * @dataProvider  provideInvoke
      */
-    public function testInvoke($value)
+    public function testInvoke($value): void
     {
         $object = new SetLastInsertIdStub($value);
         $invocation = $this->createInvocationExpectMethod('setLastInsertId', $value);
         $object->invoke($invocation);
     }
 
-    public function provideInvoke()
+    public function provideInvoke(): array
     {
         return [
             [123],

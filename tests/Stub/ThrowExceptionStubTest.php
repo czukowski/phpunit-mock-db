@@ -1,7 +1,9 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Stub;
 
-use RuntimeException;
+use RuntimeException,
+    Throwable;
 
 /**
  * ThrowExceptionStubTest
@@ -14,7 +16,7 @@ class ThrowExceptionStubTest extends Testcase
     /**
      * @dataProvider  provideInvoke
      */
-    public function testInvoke($exception)
+    public function testInvoke(Throwable $exception): void
     {
         $object = new ThrowExceptionStub($exception);
         $invocation = $this->createInvocation();
@@ -22,7 +24,7 @@ class ThrowExceptionStubTest extends Testcase
         $object->invoke($invocation);
     }
 
-    public function provideInvoke()
+    public function provideInvoke(): array
     {
         return [
             [new RuntimeException('Boom', -100)],

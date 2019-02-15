@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB;
 
 /**
@@ -35,12 +36,12 @@ interface Invocation
     function setLastInsertId($value);
 
     /**
-     * @return  array|NULL
+     * @return  iterable|NULL
      */
     function getResultSet();
 
     /**
-     * @param  mixed  $result
+     * @param  iterable  $result
      */
     function setResultSet($result);
 }

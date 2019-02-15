@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Stub;
 
 use Cz\PHPUnit\MockDB,
@@ -19,7 +20,7 @@ abstract class Testcase extends MockDB\Testcase
      * @param   mixed   $argument
      * @return  Invocation
      */
-    protected function createInvocationExpectMethod($name, $argument)
+    protected function createInvocationExpectMethod(string $name, $argument): Invocation
     {
         $invocation = $this->createInvocation([$name]);
         $invocation->expects($this->once())
@@ -32,7 +33,7 @@ abstract class Testcase extends MockDB\Testcase
      * @param   array  $skipMethods
      * @return  Invocation
      */
-    protected function createInvocation(array $skipMethods = [])
+    protected function createInvocation(array $skipMethods = []): Invocation
     {
         $invocation = $this->createMock(Invocation::class);
         foreach ($this->getAbstractMethods(Invocation::class) as $name) {
@@ -48,7 +49,7 @@ abstract class Testcase extends MockDB\Testcase
      * @param   string  $className
      * @return  array
      */
-    private function getAbstractMethods($className)
+    private function getAbstractMethods(string $className): array
     {
         $class = new ReflectionClass($className);
         return array_map(

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Invocation,
@@ -30,7 +31,7 @@ class MockTraitIntegrationTest extends Testcase
      * 
      * @dataProvider  provideMatchSingleSelectInvocation
      */
-    public function testMatchAnyQueryAnyInvocationCount(string $query, array $expected)
+    public function testMatchAnyQueryAnyInvocationCount(string $query, array $expected): void
     {
         $this->createDatabaseMock()
             ->expects($this->any())
@@ -44,7 +45,7 @@ class MockTraitIntegrationTest extends Testcase
      * 
      * @dataProvider  provideMatchSingleSelectInvocation
      */
-    public function testMatchAnyQuerySingleInvocation(string $query, array $expected)
+    public function testMatchAnyQuerySingleInvocation(string $query, array $expected): void
     {
         $this->createDatabaseMock()
             ->expects($this->once())
@@ -58,14 +59,14 @@ class MockTraitIntegrationTest extends Testcase
      * 
      * @dataProvider  provideMatchSingleSelectInvocation
      */
-    public function testMatchAnyQueryAnyInvocationCountNoneInvoked($_, array $expected)
+    public function testMatchAnyQueryAnyInvocationCountNoneInvoked($_, array $expected): void
     {
         $this->createDatabaseMock()
             ->expects($this->any())
             ->willReturnResultSet($expected);
     }
 
-    public function provideMatchSingleSelectInvocation()
+    public function provideMatchSingleSelectInvocation(): array
     {
         return [
             [
@@ -86,7 +87,8 @@ class MockTraitIntegrationTest extends Testcase
         array $expected1,
         string $query2,
         array $expected2
-    ) {
+    ): void
+    {
         $mock = $this->createDatabaseMock();
         $mock->expects($this->once())
             ->query($query1)
@@ -102,7 +104,7 @@ class MockTraitIntegrationTest extends Testcase
         $this->assertSame($expected1, $actual1);
     }
 
-    public function provideMatchTwoSelectInvocations()
+    public function provideMatchTwoSelectInvocations(): array
     {
         return [
             [
@@ -128,7 +130,8 @@ class MockTraitIntegrationTest extends Testcase
         int $expected2,
         string $query3,
         int $expected3
-    ) {
+    ): void
+    {
         $mock = $this->createDatabaseMock();
         $mock->expects($this->at(1))
             ->query($query2)
@@ -148,7 +151,7 @@ class MockTraitIntegrationTest extends Testcase
         $this->assertSame($expected3, $actual3);
     }
 
-    public function provideMatchMixedQueriesWithQueryMatchersOnceEach()
+    public function provideMatchMixedQueriesWithQueryMatchersOnceEach(): array
     {
         return [
             [
@@ -167,7 +170,7 @@ class MockTraitIntegrationTest extends Testcase
      * 
      * @dataProvider  provideMatchWithQueryMatchersWithConsecutiveCalls
      */
-    public function testMatchWithQueryMatchersWithConsecutiveCalls(string $query, array $expecteds)
+    public function testMatchWithQueryMatchersWithConsecutiveCalls(string $query, array $expecteds): void
     {
         $this->createDatabaseMock()
             ->expects($this->exactly(count($expecteds)))
@@ -180,7 +183,7 @@ class MockTraitIntegrationTest extends Testcase
         }
     }
 
-    public function provideMatchWithQueryMatchersWithConsecutiveCalls()
+    public function provideMatchWithQueryMatchersWithConsecutiveCalls(): array
     {
         return [
             [
@@ -200,7 +203,8 @@ class MockTraitIntegrationTest extends Testcase
         int $expectTimes,
         string $query,
         int $expected
-    ) {
+    ): void
+    {
         $this->createDatabaseMock()
             ->expects($this->exactly($expectTimes))
             ->query($query)
@@ -212,7 +216,7 @@ class MockTraitIntegrationTest extends Testcase
         }
     }
 
-    public function provideMatchWithQueryMatcherAssertAffectedRows()
+    public function provideMatchWithQueryMatcherAssertAffectedRows(): array
     {
         return [
             [
@@ -233,7 +237,8 @@ class MockTraitIntegrationTest extends Testcase
         Constraint $constraint,
         string $query,
         array $expected
-    ) {
+    ): void
+    {
         $this->createDatabaseMock()
             ->expects($this->once())
             ->query($constraint)
@@ -242,7 +247,7 @@ class MockTraitIntegrationTest extends Testcase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideMatchQueryWithPHPUnitConstraint()
+    public function provideMatchQueryWithPHPUnitConstraint(): array
     {
         return [
             [
@@ -264,7 +269,8 @@ class MockTraitIntegrationTest extends Testcase
         string $query,
         Throwable $exception,
         array $expecteds
-    ) {
+    ): void
+    {
         $queue = $expecteds;
         $this->createDatabaseMock()
             ->expects($this->atLeast(count($expecteds) + 1))
@@ -296,7 +302,7 @@ class MockTraitIntegrationTest extends Testcase
         $this->assertSame($expecteds[2], $actual2);
     }
 
-    public function provideMatchWithQueryMatchersWithConsecutiveCallsBuilder()
+    public function provideMatchWithQueryMatchersWithConsecutiveCallsBuilder(): array
     {
         return [
             [
@@ -318,7 +324,8 @@ class MockTraitIntegrationTest extends Testcase
         callable $callback,
         string $query,
         $expected
-    ) {
+    ): void
+    {
         $this->createDatabaseMock()
             ->expects($this->once())
             ->query($constraint)
@@ -328,7 +335,7 @@ class MockTraitIntegrationTest extends Testcase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideMatchWithQueryMatchersWithCustomCallbackHandlers()
+    public function provideMatchWithQueryMatchersWithCustomCallbackHandlers(): array
     {
         return [
             [
@@ -358,12 +365,12 @@ class MockTraitIntegrationTest extends Testcase
         ];
     }
 
-    protected function getDatabaseDriver()
+    protected function getDatabaseDriver(): DatabaseDriverInterface
     {
         return $this->db;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $instance = NULL;
         $this->db = $this->createPartialMock(
@@ -395,7 +402,7 @@ class MockTraitIntegrationTest extends Testcase
             });
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->db = NULL;
     }

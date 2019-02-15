@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
@@ -16,7 +17,7 @@ class MatcherInvocationWrapperTest extends Testcase
     /**
      * @dataProvider  provideInvoked
      */
-    public function testInvoked($baseInvocation, $wrappedInvocation)
+    public function testInvoked(BaseInvocation $baseInvocation, InvocationWrapper $wrappedInvocation): void
     {
         $invocation = $this->createMatcherInvocation();
         $invocation->expects($this->once())
@@ -29,7 +30,7 @@ class MatcherInvocationWrapperTest extends Testcase
         $object->invoked($baseInvocation);
     }
 
-    public function provideInvoked()
+    public function provideInvoked(): array
     {
         return [
             [
@@ -42,7 +43,7 @@ class MatcherInvocationWrapperTest extends Testcase
     /**
      * @dataProvider  provideMatches
      */
-    public function testMatches($baseInvocation, $wrappedInvocation, $expected)
+    public function testMatches(BaseInvocation $baseInvocation, InvocationWrapper $wrappedInvocation, bool $expected): void
     {
         $invocation = $this->createMatcherInvocation();
         $invocation->expects($this->once())
@@ -57,7 +58,7 @@ class MatcherInvocationWrapperTest extends Testcase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideMatches()
+    public function provideMatches(): array
     {
         return [
             [
@@ -76,7 +77,7 @@ class MatcherInvocationWrapperTest extends Testcase
     /**
      * @test
      */
-    public function testVerify()
+    public function testVerify(): void
     {
         $invocation = $this->createMatcherInvocation();
         $invocation->expects($this->once())
@@ -88,14 +89,14 @@ class MatcherInvocationWrapperTest extends Testcase
     /**
      * @dataProvider  provideIsAnyInvokedCount
      */
-    public function testIsAnyInvokedCount($invocation, $expected)
+    public function testIsAnyInvokedCount(MockObjectMatcherInvocation $invocation, bool $expected): void
     {
         $object = $this->createObject($invocation);
         $actual = $object->isAnyInvokedCount();
         $this->assertSame($expected, $actual);
     }
 
-    public function provideIsAnyInvokedCount()
+    public function provideIsAnyInvokedCount(): array
     {
         return [
             [
@@ -124,14 +125,14 @@ class MatcherInvocationWrapperTest extends Testcase
     /**
      * @dataProvider  provideIsNeverInvokedCount
      */
-    public function testIsNeverInvokedCount($invocation, $expected)
+    public function testIsNeverInvokedCount(MockObjectMatcherInvocation $invocation, bool $expected): void
     {
         $object = $this->createObject($invocation);
         $actual = $object->isNeverInvokedCount();
         $this->assertSame($expected, $actual);
     }
 
-    public function provideIsNeverInvokedCount()
+    public function provideIsNeverInvokedCount(): array
     {
         return [
             [
@@ -161,7 +162,10 @@ class MatcherInvocationWrapperTest extends Testcase
         ];
     }
 
-    private function createContainer($baseInvocation, $wrappedInvocation)
+    private function createContainer(
+        BaseInvocation $baseInvocation,
+        InvocationWrapper $wrappedInvocation
+    ): InvocationsContainer
     {
         $object = $this->createMock(InvocationsContainer::class);
         $object->expects($this->once())
@@ -171,12 +175,15 @@ class MatcherInvocationWrapperTest extends Testcase
         return $object;
     }
 
-    private function createMatcherInvocation()
+    private function createMatcherInvocation(): MockObjectMatcherInvocation
     {
         return $this->createMock(MockObjectMatcherInvocation::class);
     }
 
-    private function createObject(MockObjectMatcherInvocation $invocation, InvocationsContainer $container = NULL)
+    private function createObject(
+        MockObjectMatcherInvocation $invocation,
+        InvocationsContainer $container = NULL
+    ): MatcherInvocationWrapper
     {
         if ($container === NULL) {
             $container = $this->createMock(InvocationsContainer::class);

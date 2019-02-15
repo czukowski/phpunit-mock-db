@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Stub;
 
 use Cz\PHPUnit\MockDB\Invocation;
@@ -14,14 +15,14 @@ class InvokeCallbackStubTest extends Testcase
     /**
      * @dataProvider  provideInvoke
      */
-    public function testInvoke($callback, $method, $argument)
+    public function testInvoke(callable $callback, string $method, $argument): void
     {
         $object = new InvokeCallbackStub($callback);
         $invocation = $this->createInvocationExpectMethod($method, $argument);
         $object->invoke($invocation);
     }
 
-    public function provideInvoke()
+    public function provideInvoke(): array
     {
         return [
             [

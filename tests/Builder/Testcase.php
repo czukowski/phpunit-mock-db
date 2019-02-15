@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Builder;
 
 use Cz\PHPUnit\MockDB,
@@ -23,10 +24,11 @@ abstract class Testcase extends MockDB\Testcase
         array $expectedItems,
         string $expectedInstanceOf,
         string $attribute
-    ) {
+    ): void
+    {
         $this->assertInstanceOf(Stub\ConsecutiveCallsStub::class, $stub);
-        $stack = $this->getObjectAttribute($stub, 'stack');
-        $this->assertInternalType('array', $stack);
+        $stack = $this->getObjectPropertyValue($stub, 'stack');
+        $this->assertIsArray($stack);
         $this->assertCount(count($expectedItems), $stack);
         for ($i = 0; $i < count($expectedItems); $i++) {
             $this->assertStub($stack[$i], $expectedInstanceOf, $attribute, $expectedItems[$i]);
@@ -44,9 +46,10 @@ abstract class Testcase extends MockDB\Testcase
         string $expectedInstanceOf,
         string $attribute,
         $expectedAttribute
-    ) {
+    ): void
+    {
         $this->assertInstanceOf($expectedInstanceOf, $stub);
-        $actual = $this->getObjectAttribute($stub, $attribute);
+        $actual = $this->getObjectPropertyValue($stub, $attribute);
         $this->assertSame($expectedAttribute, $actual);
     }
 }

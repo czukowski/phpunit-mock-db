@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
@@ -7,7 +8,9 @@ use Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
     Cz\PHPUnit\SQL\EqualsSQLQueriesConstraint,
     PHPUnit\Framework\Constraint\Constraint,
-    PHPUnit\Framework\ExpectationFailedException;
+    PHPUnit\Framework\ExpectationFailedException,
+    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation,
+    Throwable;
 
 /**
  * MatcherTest
@@ -20,14 +23,14 @@ class MatcherTest extends Testcase
     /**
      * @dataProvider  provideHasMatchers
      */
-    public function testHasMatchers($invocationMatcher, $expected)
+    public function testHasMatchers(RecordedInvocation $invocationMatcher, bool $expected): void
     {
         $object = new Matcher($invocationMatcher);
         $actual = $object->hasMatchers();
         $this->assertSame($expected, $actual);
     }
 
-    public function provideHasMatchers()
+    public function provideHasMatchers(): array
     {
         return [
             [$this->createMatcherInvocationMock(FALSE), TRUE],
@@ -38,7 +41,7 @@ class MatcherTest extends Testcase
         ];
     }
 
-    private function createMatcherInvocationMock($isAnyInvokedCount)
+    private function createMatcherInvocationMock(bool $isAnyInvokedCount): RecordedInvocation
     {
         $mock = $this->createMock(RecordedInvocation::class);
         $mock->expects($this->once())
@@ -47,7 +50,7 @@ class MatcherTest extends Testcase
         return $mock;
     }
 
-    private function createMatcherInvocationWrapper($invocationMatcher)
+    private function createMatcherInvocationWrapper(MockObjectMatcherInvocation $invocationMatcher): MatcherInvocationWrapper
     {
         return new MatcherInvocationWrapper($invocationMatcher, new InvocationsContainer);
     }
@@ -55,7 +58,7 @@ class MatcherTest extends Testcase
     /**
      * @dataProvider  provideQueryMatcher
      */
-    public function testQueryMatcher($constraint)
+    public function testQueryMatcher(Constraint $constraint): void
     {
         $object = new Matcher($this->createMock(RecordedInvocation::class));
         $this->assertNull($object->getQueryMatcher());
@@ -68,7 +71,7 @@ class MatcherTest extends Testcase
         $object->setQueryMatcher($matcher);
     }
 
-    public function provideQueryMatcher()
+    public function provideQueryMatcher(): array
     {
         return [
             [$this->createMock(Constraint::class)],
@@ -80,7 +83,7 @@ class MatcherTest extends Testcase
     /**
      * @dataProvider  provideInvoked
      */
-    public function testInvoked($invocation, $invocationMatcherSetup, $stubSetup)
+    public function testInvoked(Invocation $invocation, array $invocationMatcherSetup, ?array $stubSetup): void
     {
         $invocationMatcher = $this->createMock(RecordedInvocation::class);
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
@@ -95,7 +98,7 @@ class MatcherTest extends Testcase
         $this->assertNull($actual);
     }
 
-    public function provideInvoked()
+    public function provideInvoked(): array
     {
         return [
             $this->createInvokedTestCase(FALSE),
@@ -103,7 +106,7 @@ class MatcherTest extends Testcase
         ];
     }
 
-    private function createInvokedTestCase($withStub)
+    private function createInvokedTestCase(bool $withStub): array
     {
         $invocation = $this->createInvocationMock();
         return [
@@ -116,7 +119,7 @@ class MatcherTest extends Testcase
                     ],
                 ],
             ],
-            $withStub === NULL
+            $withStub
                 ? NULL
                 : [
                       'invoke' => [
@@ -132,7 +135,12 @@ class MatcherTest extends Testcase
     /**
      * @dataProvider  provideMatches
      */
-    public function testMatches($invocation, $invocationMatcherSetup, $queryMatcherSetup, $expected)
+    public function testMatches(
+        Invocation $invocation,
+        array $invocationMatcherSetup,
+        ?array $queryMatcherSetup,
+        bool $expected
+    ): void
     {
         $invocationMatcher = $this->createMock(RecordedInvocation::class);
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
@@ -147,7 +155,7 @@ class MatcherTest extends Testcase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideMatches()
+    public function provideMatches(): array
     {
         return [
             $this->createMatchesTestCase(TRUE, NULL, TRUE),
@@ -159,7 +167,11 @@ class MatcherTest extends Testcase
         ];
     }
 
-    private function createMatchesTestCase($matchesInvocationMatcher, $matchesQueryMatcher, $expected)
+    private function createMatchesTestCase(
+        bool $matchesInvocationMatcher,
+        ?bool $matchesQueryMatcher,
+        bool $expected
+    ): array
     {
         $invocation = $this->createInvocationMock();
         return [
@@ -191,7 +203,7 @@ class MatcherTest extends Testcase
     /**
      * @dataProvider  provideVerifyInvocationMatcher
      */
-    public function testVerifyInvocationMatcher($invocationMatcherSetup, $expected)
+    public function testVerifyInvocationMatcher(array $invocationMatcherSetup, ?Throwable $expected): void
     {
         $invocationMatcher = $this->createMock(RecordedInvocation::class);
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
@@ -202,7 +214,7 @@ class MatcherTest extends Testcase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideVerifyInvocationMatcher()
+    public function provideVerifyInvocationMatcher(): array
     {
         return [
             $this->createVerifyInvocationMatcherTestCase(TRUE),
@@ -210,7 +222,7 @@ class MatcherTest extends Testcase
         ];
     }
 
-    private function createVerifyInvocationMatcherTestCase($willVerify)
+    private function createVerifyInvocationMatcherTestCase(bool $willVerify): array
     {
         return [
             [
@@ -230,7 +242,11 @@ class MatcherTest extends Testcase
     /**
      * @dataProvider  provideVerifyQueryMatcher
      */
-    public function testVerifyQueryMatcher($invocationMatcherSetup, $queryMatcherSetup, $expected)
+    public function testVerifyQueryMatcher(
+        array $invocationMatcherSetup,
+        array $queryMatcherSetup,
+        ?Throwable $expected
+    ): void
     {
         $invocationMatcher = $this->createMock(RecordedInvocation::class);
         $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
@@ -245,7 +261,7 @@ class MatcherTest extends Testcase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideVerifyQueryMatcher()
+    public function provideVerifyQueryMatcher(): array
     {
         return [
             $this->createVerifyQueryMatcherTestCase(FALSE, FALSE, TRUE),
@@ -256,7 +272,7 @@ class MatcherTest extends Testcase
         ];
     }
 
-    private function createVerifyQueryMatcherTestCase($isAny, $isNever, $willVerify)
+    private function createVerifyQueryMatcherTestCase(bool $isAny, bool $isNever, ?bool $willVerify): array
     {
         return [
             [
@@ -292,12 +308,12 @@ class MatcherTest extends Testcase
         ];
     }
 
-    private function createInvocationMock()
+    private function createInvocationMock(): Invocation
     {
         return $this->createMock(Invocation::class);
     }
 
-    private function setupMockObject($object, array $setup)
+    private function setupMockObject($object, array $setup): void
     {
         foreach ($setup as $method => $invocations) {
             foreach ($invocations as $invocation) {

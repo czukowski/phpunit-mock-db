@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Invocation;
 
 use Cz\PHPUnit\MockDB\Testcase,
@@ -15,13 +16,13 @@ class QueryInvocationTest extends Testcase
     /**
      * @dataProvider  provideGetQuery
      */
-    public function testGetQuery($query)
+    public function testGetQuery(string $query): void
     {
         $object = $this->createObject($query);
         $this->assertSame($query, $object->getQuery());
     }
 
-    public function provideGetQuery()
+    public function provideGetQuery(): array
     {
         return [
             ['SELECT * FROM `t`'],
@@ -31,14 +32,14 @@ class QueryInvocationTest extends Testcase
     /**
      * @dataProvider  provideAffectedRows
      */
-    public function testAffectedRows($query, $value)
+    public function testAffectedRows(string $query, int $value): void
     {
         $object = $this->createObject($query);
         $object->setAffectedRows($value);
         $this->assertSame($value, $object->getAffectedRows());
     }
 
-    public function provideAffectedRows()
+    public function provideAffectedRows(): array
     {
         return [
             ['UPDATE `t` SET `a` = 1 WHERE `b` = 2', 100],
@@ -48,14 +49,14 @@ class QueryInvocationTest extends Testcase
     /**
      * @dataProvider  provideLastInsertId
      */
-    public function testLastInsertId($query, $value)
+    public function testLastInsertId(string $query, $value): void
     {
         $object = $this->createObject($query);
         $object->setLastInsertId($value);
         $this->assertSame($value, $object->getLastInsertId());
     }
 
-    public function provideLastInsertId()
+    public function provideLastInsertId(): array
     {
         return [
             ['INSERT INTO `t` (`a`, `b`) VALUES (1, 2)', 505],
@@ -65,14 +66,14 @@ class QueryInvocationTest extends Testcase
     /**
      * @dataProvider  provideResultSet
      */
-    public function testResultSet($query, $results)
+    public function testResultSet(string $query, iterable $results): void
     {
         $object = $this->createObject($query);
         $object->setResultSet($results);
         $this->assertSame($results, $object->getResultSet());
     }
 
-    public function provideResultSet()
+    public function provideResultSet(): array
     {
         return [
             [
@@ -96,7 +97,7 @@ class QueryInvocationTest extends Testcase
         ];
     }
 
-    private function createObject($query)
+    private function createObject(string $query): QueryInvocation
     {
         return new QueryInvocation($query);
     }

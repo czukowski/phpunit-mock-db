@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Stub;
 
 /**
@@ -12,14 +13,14 @@ class ReturnResultSetStubTest extends Testcase
     /**
      * @dataProvider  provideInvoke
      */
-    public function testInvoke($results)
+    public function testInvoke(array $results): void
     {
         $object = new ReturnResultSetStub($results);
         $invocation = $this->createInvocationExpectMethod('setResultSet', $results);
         $object->invoke($invocation);
     }
 
-    public function provideInvoke()
+    public function provideInvoke(): array
     {
         return [
             [

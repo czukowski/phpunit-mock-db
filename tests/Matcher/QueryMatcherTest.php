@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Matcher;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
@@ -16,7 +17,7 @@ class QueryMatcherTest extends Testcase
     /**
      * @dataProvider  provideMatches
      */
-    public function testMatches($query, $expected)
+    public function testMatches(string $query, bool $expected): void
     {
         $constraint = $this->createMock(Constraint::class);
         $constraint->expects($this->once())
@@ -32,7 +33,7 @@ class QueryMatcherTest extends Testcase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideMatches()
+    public function provideMatches(): array
     {
         return [
             ['SELECT * FROM `t1`', TRUE],

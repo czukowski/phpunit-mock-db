@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\MockObject\MockWrapper;
@@ -14,7 +15,7 @@ class MockTraitTest extends Testcase
     /**
      * @test
      */
-    public function testCreateDatabaseMock()
+    public function testCreateDatabaseMock(): void
     {
         $setMockObject = NULL;
         $registerMockObject = NULL;
@@ -38,7 +39,7 @@ class MockTraitTest extends Testcase
             ->with($this->callback(
                 function ($mockObject) use ( & $registerMockObject) {
                     $this->assertInstanceOf(MockWrapper::class, $mockObject);
-                    $mock = $this->getObjectAttribute($mockObject, 'object');
+                    $mock = $this->getObjectPropertyValue($mockObject, 'object');
                     $this->assertInstanceOf(Mock::class, $mock);
                     $registerMockObject = $mock;
                     return TRUE;

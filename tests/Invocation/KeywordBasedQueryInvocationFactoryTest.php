@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Invocation;
 
 use Cz\PHPUnit\MockDB\Invocation,
@@ -16,17 +17,17 @@ class KeywordBasedQueryInvocationFactoryTest extends Testcase
     /**
      * @dataProvider  provideCreateInvocation
      */
-    public function testCreateInvocation($sql, $expected)
+    public function testCreateInvocation(string $sql, $expected): void
     {
         $object = $this->createObject();
         $this->expectExceptionFromArgument($expected);
         $actual = $object->createInvocation($sql);
         $this->assertInstanceOf(QueryInvocation::class, $actual);
-        $this->assertInternalType('callable', $expected);
+        $this->assertIsCallable($expected);
         call_user_func($expected, $actual);
     }
 
-    public function provideCreateInvocation()
+    public function provideCreateInvocation(): array
     {
         return [
             $this->createCreateInvocationTestCaseForUpdateKeyword('UPDATE `t1` SET `name` = "foo"'),
@@ -43,7 +44,7 @@ class KeywordBasedQueryInvocationFactoryTest extends Testcase
         ];
     }
 
-    private function createCreateInvocationTestCaseForUpdateKeyword($sql)
+    private function createCreateInvocationTestCaseForUpdateKeyword(string $sql): array
     {
         return [
             $sql,
@@ -55,7 +56,7 @@ class KeywordBasedQueryInvocationFactoryTest extends Testcase
         ];
     }
 
-    private function createCreateInvocationTestCaseForInsertKeyword($sql)
+    private function createCreateInvocationTestCaseForInsertKeyword(string $sql): array
     {
         return [
             $sql,
@@ -67,7 +68,7 @@ class KeywordBasedQueryInvocationFactoryTest extends Testcase
         ];
     }
 
-    private function createCreateInvocationTestCaseForSelectKeyword($sql)
+    private function createCreateInvocationTestCaseForSelectKeyword(string $sql): array
     {
         return [
             $sql,
@@ -79,7 +80,7 @@ class KeywordBasedQueryInvocationFactoryTest extends Testcase
         ];
     }
 
-    private function createCreateInvocationTestCaseForUnknownKeyword($sql)
+    private function createCreateInvocationTestCaseForUnknownKeyword(string $sql): array
     {
         return [
             $sql,
@@ -91,12 +92,12 @@ class KeywordBasedQueryInvocationFactoryTest extends Testcase
         ];
     }
 
-    private function createCreateInvocationTestCaseForException($sql)
+    private function createCreateInvocationTestCaseForException(string $sql): array
     {
         return [$sql, new InvalidArgumentException];
     }
 
-    private function createObject()
+    private function createObject(): KeywordBasedQueryInvocationFactory
     {
         return new KeywordBasedQueryInvocationFactory;
     }

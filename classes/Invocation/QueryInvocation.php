@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Invocation;
 
 use Cz\PHPUnit\MockDB\Invocation;
@@ -77,7 +78,7 @@ class QueryInvocation implements Invocation
     }
 
     /**
-     * @return  array
+     * @return  iterable
      */
     public function getResultSet()
     {
@@ -85,7 +86,7 @@ class QueryInvocation implements Invocation
     }
 
     /**
-     * @param  mixed  $result
+     * @param  iterable  $result
      */
     public function setResultSet($result)
     {

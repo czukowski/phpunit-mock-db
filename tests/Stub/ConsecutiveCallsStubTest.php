@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Stub;
 
 use Cz\PHPUnit\MockDB\Invocation,
@@ -17,18 +18,18 @@ class ConsecutiveCallsStubTest extends Testcase
     /**
      * @dataProvider  provideAddStub
      */
-    public function testAddStub($initialStack, $stub)
+    public function testAddStub(array $initialStack, Stub $stub): void
     {
         $object = new ConsecutiveCallsStub($initialStack);
         $initialStackCount = count($initialStack);
         $object->addStub($stub);
-        $stack = $this->getObjectAttribute($object, 'stack');
+        $stack = $this->getObjectPropertyValue($object, 'stack');
         $actual = $stack[$initialStackCount];
         $this->assertSame($stub, $actual);
         $this->assertCount($initialStackCount + 1, $stack);
     }
 
-    public function provideAddStub()
+    public function provideAddStub(): array
     {
         return [
             [
@@ -48,7 +49,7 @@ class ConsecutiveCallsStubTest extends Testcase
     /**
      * @dataProvider  provideInvoke
      */
-    public function testInvoke($stack, array $invocations)
+    public function testInvoke(array $stack, array $invocations): void
     {
         $object = new ConsecutiveCallsStub($stack);
         foreach ($invocations as $invocation) {
@@ -60,7 +61,7 @@ class ConsecutiveCallsStubTest extends Testcase
         }
     }
 
-    public function provideInvoke()
+    public function provideInvoke(): array
     {
         $resultSet1 = [
             ['id' => 1, 'name' => 'foo'],
@@ -89,7 +90,7 @@ class ConsecutiveCallsStubTest extends Testcase
         ];
     }
 
-    private function createStub($method, $argument)
+    private function createStub(string $method, $argument): Stub
     {
         $stub = $this->createMock(Stub::class);
         $stub->expects($this->once())

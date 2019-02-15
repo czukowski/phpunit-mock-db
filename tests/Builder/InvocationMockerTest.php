@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Builder;
 
 use Cz\PHPUnit\MockDB\Matcher,
@@ -10,7 +11,8 @@ use Cz\PHPUnit\MockDB\Matcher,
     ArrayObject,
     PHPUnit\Framework\Constraint\Constraint,
     PHPUnit\Framework\Constraint\StringStartsWith,
-    RuntimeException;
+    RuntimeException,
+    Throwable;
 
 /**
  * InvocationMockerTest
@@ -23,17 +25,17 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideOnConsecutiveCalls
      */
-    public function testOnConsecutiveCalls($object)
+    public function testOnConsecutiveCalls(InvocationMocker $object): void
     {
         $actual = $object->onConsecutiveCalls();
         $this->assertInstanceOf(ConsecutiveCallsBuilder::class, $actual);
-        $this->assertSame($object, $this->getObjectAttribute($actual, 'builder'));
-        $stub = $this->getObjectAttribute($actual, 'stub');
+        $this->assertSame($object, $this->getObjectPropertyValue($actual, 'builder'));
+        $stub = $this->getObjectPropertyValue($actual, 'stub');
         $this->assertInstanceOf(ConsecutiveCallsStub::class, $stub);
-        $this->assertEmpty($this->getObjectAttribute($stub, 'stack'));
+        $this->assertEmpty($this->getObjectPropertyValue($stub, 'stack'));
     }
 
-    public function provideOnConsecutiveCalls()
+    public function provideOnConsecutiveCalls(): array
     {
         return [
             [$this->createObject()],
@@ -43,7 +45,7 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideQuery
      */
-    public function testQuery($constraint, $expected)
+    public function testQuery($constraint, string $expected): void
     {
         $object = $this->createObject();
         $self = $object->query($constraint);
@@ -51,14 +53,14 @@ class InvocationMockerTest extends Testcase
         $queryMatcher = $this->getObjectMatcher($object)
             ->getQueryMatcher();
         $this->assertInstanceOf(QueryMatcher::class, $queryMatcher);
-        $actual = $this->getObjectAttribute($queryMatcher, 'constraint');
+        $actual = $this->getObjectPropertyValue($queryMatcher, 'constraint');
         $this->assertInstanceOf($expected, $actual);
         if ($constraint instanceof Constraint) {
             $this->assertSame($constraint, $actual);
         }
     }
 
-    public function provideQuery()
+    public function provideQuery(): array
     {
         return [
             ['SELECT * FROM `t1`', EqualsSQLQueriesConstraint::class],
@@ -70,19 +72,19 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideWill
      */
-    public function testWill($stub, $expected)
+    public function testWill(Stub $stub, string $expected): void
     {
         $object = $this->createObject();
         $self = $object->will($stub);
         $this->assertSame($object, $self);
-        $actual = $this->getObjectAttribute($this->getObjectMatcher($object), 'stub');
+        $actual = $this->getObjectPropertyValue($this->getObjectMatcher($object), 'stub');
         $this->assertInstanceOf($expected, $actual);
         if ($stub instanceof Stub) {
             $this->assertSame($stub, $actual);
         }
     }
 
-    public function provideWill()
+    public function provideWill(): array
     {
         return [
             [$this->createMock(Stub::class), Stub::class],
@@ -95,14 +97,14 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideWillInvokeCallback
      */
-    public function testWillInvokeCallback($arguments, $callback)
+    public function testWillInvokeCallback(array $arguments, callable $callback): void
     {
         $object = $this->createMockObjectForWillTest($callback);
         $actual = $object->willInvokeCallback(...$arguments);
         $this->assertSame($object, $actual);
     }
 
-    public function provideWillInvokeCallback()
+    public function provideWillInvokeCallback(): array
     {
         return [
             $this->createWillInvokeCallbackTestCaseSingleCall(function () {}),
@@ -110,7 +112,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillInvokeCallbackTestCaseSingleCall($callback)
+    private function createWillInvokeCallbackTestCaseSingleCall(callable $callback): array
     {
         return [
             [$callback],
@@ -121,7 +123,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillInvokeCallbackTestCaseConsecutiveCalls($callbacks)
+    private function createWillInvokeCallbackTestCaseConsecutiveCalls(array $callbacks): array
     {
         return [
             $callbacks,
@@ -135,14 +137,14 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideWillReturnResultSet
      */
-    public function testWillReturnResultSet($arguments, $callback)
+    public function testWillReturnResultSet(array $arguments, callable $callback): void
     {
         $object = $this->createMockObjectForWillTest($callback);
         $actual = $object->willReturnResultSet(...$arguments);
         $this->assertSame($object, $actual);
     }
 
-    public function provideWillReturnResultSet()
+    public function provideWillReturnResultSet(): array
     {
         $resultSet1 = [];
         $resultSet2 = [
@@ -163,7 +165,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillReturnResultSetTestCaseSingleCall($value)
+    private function createWillReturnResultSetTestCaseSingleCall(?iterable $value): array
     {
         return [
             [$value],
@@ -174,7 +176,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillReturnResultSetTestCaseConsecutiveCalls(array $values)
+    private function createWillReturnResultSetTestCaseConsecutiveCalls(array $values): array
     {
         return [
             $values,
@@ -188,14 +190,14 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideWillSetAffectedRows
      */
-    public function testWillSetAffectedRows($arguments, $callback)
+    public function testWillSetAffectedRows(array $arguments, callable $callback): void
     {
         $object = $this->createMockObjectForWillTest($callback);
         $actual = $object->willSetAffectedRows(...$arguments);
         $this->assertSame($object, $actual);
     }
 
-    public function provideWillSetAffectedRows()
+    public function provideWillSetAffectedRows(): array
     {
         return [
             $this->createWillSetAffectedRowsTestCaseSingleCall(0),
@@ -204,7 +206,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillSetAffectedRowsTestCaseSingleCall($value)
+    private function createWillSetAffectedRowsTestCaseSingleCall(int $value): array
     {
         return [
             [$value],
@@ -215,7 +217,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillSetAffectedRowsTestCaseConsecutiveCalls(array $values)
+    private function createWillSetAffectedRowsTestCaseConsecutiveCalls(array $values): array
     {
         return [
             $values,
@@ -229,14 +231,14 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideWillSetLastInsertId
      */
-    public function testWillSetLastInsertId($arguments, $callback)
+    public function testWillSetLastInsertId(array $arguments, callable $callback): void
     {
         $object = $this->createMockObjectForWillTest($callback);
         $actual = $object->willSetLastInsertId(...$arguments);
         $this->assertSame($object, $actual);
     }
 
-    public function provideWillSetLastInsertId()
+    public function provideWillSetLastInsertId(): array
     {
         return [
             $this->createWillSetLastInsertIdTestCaseSingleCall(NULL),
@@ -246,7 +248,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillSetLastInsertIdTestCaseSingleCall($value)
+    private function createWillSetLastInsertIdTestCaseSingleCall($value): array
     {
         return [
             [$value],
@@ -257,7 +259,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillSetLastInsertIdTestCaseConsecutiveCalls(array $values)
+    private function createWillSetLastInsertIdTestCaseConsecutiveCalls(array $values): array
     {
         return [
             $values,
@@ -271,14 +273,14 @@ class InvocationMockerTest extends Testcase
     /**
      * @dataProvider  provideWillThrowException
      */
-    public function testWillThrowException($arguments, $callback)
+    public function testWillThrowException(array $arguments, callable $callback): void
     {
         $object = $this->createMockObjectForWillTest($callback);
         $actual = $object->willThrowException(...$arguments);
         $this->assertSame($object, $actual);
     }
 
-    public function provideWillThrowException()
+    public function provideWillThrowException(): array
     {
         return [
             $this->createWillThrowExceptionTestCaseSingleCall(new RuntimeException),
@@ -286,7 +288,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillThrowExceptionTestCaseSingleCall($value)
+    private function createWillThrowExceptionTestCaseSingleCall(Throwable $value): array
     {
         return [
             [$value],
@@ -297,7 +299,7 @@ class InvocationMockerTest extends Testcase
         ];
     }
 
-    private function createWillThrowExceptionTestCaseConsecutiveCalls(array $values)
+    private function createWillThrowExceptionTestCaseConsecutiveCalls(array $values): array
     {
         return [
             $values,
@@ -312,7 +314,7 @@ class InvocationMockerTest extends Testcase
      * @param   callable  $checkArgument
      * @return  InvocationMocker
      */
-    private function createMockObjectForWillTest(callable $checkArgument)
+    private function createMockObjectForWillTest(callable $checkArgument): InvocationMocker
     {
         $object = $this->getMockBuilder(InvocationMocker::class)
             ->disableOriginalConstructor()
@@ -328,7 +330,7 @@ class InvocationMockerTest extends Testcase
     /**
      * @return  InvocationMocker
      */
-    private function createObject()
+    private function createObject(): InvocationMocker
     {
         return new InvocationMocker(
             $this->createMock(Stub\MatcherCollection::class),
@@ -340,9 +342,9 @@ class InvocationMockerTest extends Testcase
      * @param   InvocationMocker  $object
      * @return  Matcher
      */
-    private function getObjectMatcher(InvocationMocker $object)
+    private function getObjectMatcher(InvocationMocker $object): Matcher
     {
-        $matcher = $this->getObjectAttribute($object, 'matcher');
+        $matcher = $this->getObjectPropertyValue($object, 'matcher');
         $this->assertInstanceOf(Matcher::class, $matcher);
         return $matcher;
     }

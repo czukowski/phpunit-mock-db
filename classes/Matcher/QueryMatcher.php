@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Matcher;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,

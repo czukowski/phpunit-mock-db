@@ -1,12 +1,15 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Invocation\QueryInvocation,
+    Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
-    PHPUnit\Framework\Exception as FrameworkException;
+    PHPUnit\Framework\Exception as FrameworkException,
+    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation;
 
 /**
  * MockTest
@@ -19,7 +22,7 @@ class MockTest extends Testcase
     /**
      * @dataProvider  provideExpects
      */
-    public function testExpects($argument, $expected)
+    public function testExpects($argument, $expected): void
     {
         // Using test double classes to avoid having to mock methods named 'expects'.
         $invocationMocker = new Doubles\InvocationMockerDouble;
@@ -39,7 +42,7 @@ class MockTest extends Testcase
         }
     }
 
-    public function provideExpects()
+    public function provideExpects(): array
     {
         return [
             $this->createExpectsTestCaseException(NULL),
@@ -52,17 +55,17 @@ class MockTest extends Testcase
         ];
     }
 
-    private function createExpectsTestCaseException($value)
+    private function createExpectsTestCaseException($value): array
     {
         return [$value, new FrameworkException];
     }
 
-    private function createExpectsTestCaseMockDbInvocationMatcher($matcher)
+    private function createExpectsTestCaseMockDbInvocationMatcher(MatcherInvocation $matcher): array
     {
         return [$matcher, $matcher];
     }
 
-    private function createExpectsTestCaseWrappedInvocationMatcher($matcher)
+    private function createExpectsTestCaseWrappedInvocationMatcher(MockObjectMatcherInvocation $matcher): array
     {
         return [
             $matcher,
@@ -77,7 +80,7 @@ class MockTest extends Testcase
     /**
      * @dataProvider  provideInvoke
      */
-    public function testInvoke($query, $expected)
+    public function testInvoke($query, $expected): void
     {
         $invocationMocker = new Doubles\InvocationMockerDouble;
         $invocationMocker->setRequireMatch(FALSE);
@@ -93,7 +96,7 @@ class MockTest extends Testcase
         }
     }
 
-    public function provideInvoke()
+    public function provideInvoke(): array
     {
         return [
             $this->createInvokeTestCaseString('SELECT * FROM `t`'),
@@ -101,7 +104,7 @@ class MockTest extends Testcase
         ];
     }
 
-    private function createInvokeTestCaseString($query)
+    private function createInvokeTestCaseString(string $query): array
     {
         return [
             $query,
@@ -112,7 +115,7 @@ class MockTest extends Testcase
         ];
     }
 
-    private function createInvokeTestCaseInvocationInstance($query)
+    private function createInvokeTestCaseInvocationInstance(string $query): array
     {
         $invocation = new QueryInvocation($query);
         return [$invocation, $invocation];
@@ -121,7 +124,7 @@ class MockTest extends Testcase
     /**
      * @dataProvider  provideRequireMatch
      */
-    public function testGetRequireMatch($value)
+    public function testGetRequireMatch(bool $value): void
     {
         $invocationMocker = new Doubles\InvocationMockerDouble;
         $invocationMocker->setRequireMatch($value);
@@ -134,7 +137,7 @@ class MockTest extends Testcase
     /**
      * @dataProvider  provideRequireMatch
      */
-    public function testSetRequireMatch($value)
+    public function testSetRequireMatch(bool $value): void
     {
         $invocationMocker = new Doubles\InvocationMockerDouble;
         $object = new Doubles\MockDouble($invocationMocker);
@@ -144,7 +147,7 @@ class MockTest extends Testcase
         $this->assertSame($value, $invocationMocker->getRequireMatch());
     }
 
-    public function provideRequireMatch()
+    public function provideRequireMatch(): array
     {
         return [
             [TRUE],

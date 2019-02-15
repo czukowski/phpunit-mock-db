@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
@@ -15,7 +16,7 @@ class InvocationsContainerTest extends Testcase
     /**
      * @dataProvider  provideGetMockObjectInvocation
      */
-    public function testGetMockObjectInvocation($invocations)
+    public function testGetMockObjectInvocation(array $invocations): void
     {
         $object = new InvocationsContainer;
         $previousInvocations = [];
@@ -31,7 +32,7 @@ class InvocationsContainerTest extends Testcase
         }
     }
 
-    public function provideGetMockObjectInvocation()
+    public function provideGetMockObjectInvocation(): array
     {
         return [
             $this->createGetMockObjectInvocationTestCase(1),
@@ -39,7 +40,7 @@ class InvocationsContainerTest extends Testcase
         ];
     }
 
-    private function createGetMockObjectInvocationTestCase($invocationsCount)
+    private function createGetMockObjectInvocationTestCase(int $invocationsCount): array
     {
         return [
             array_map(

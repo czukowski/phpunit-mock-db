@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace Cz\PHPUnit\MockDB\Doubles;
 
 use Cz\PHPUnit\MockDB\InvocationMocker,
@@ -24,12 +25,12 @@ class MockDouble extends Mock
         $this->invocationsContainer = $invocationsContainer;
     }
 
-    public function getInvocationMocker()
+    public function getInvocationMocker(): InvocationMocker
     {
         return $this->invocationMocker;
     }
 
-    protected function getInvocationsContainer()
+    protected function getInvocationsContainer(): ?InvocationsContainer
     {
         return $this->invocationsContainer !== NULL
             ? $this->invocationsContainer
