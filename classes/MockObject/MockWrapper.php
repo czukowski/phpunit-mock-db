@@ -2,20 +2,20 @@
 
 namespace Cz\PHPUnit\MockDB\MockObject;
 
-use Cz\PHPUnit\MockDB\InvocationMocker,
-    Cz\PHPUnit\MockDB\Mock,
+use Cz\PHPUnit\MockDB\Mock,
     PHPUnit\Framework\ExpectationFailedException,
+    PHPUnit\Framework\MockObject\Builder\InvocationMocker as BuilderInvocationMocker,
     PHPUnit\Framework\MockObject\Matcher\Invocation,
     PHPUnit\Framework\MockObject\MockObject,
+    PHPUnit\Framework\MockObject\InvocationMocker,
     LogicException;
 
 /**
  * MockWrapper
  * 
- * This class purpose is to be injected into a test case in order to verify expectations.
+ * This class only purpose is to be injected into a test case in order to verify expectations.
  * Only `__phpunit_verify` and `__phpunit_hasMatchers` methods are important for this.
- * A few other simple methods are implemented as well and others are throwing `LogicException`
- * in case they are called.
+ * All other methods will throw `LogicException` in case they are called.
  * 
  * @author   czukowski
  * @license  MIT License
@@ -38,9 +38,9 @@ class MockWrapper implements MockObject
     /**
      * @return  boolean
      */
-    public function __phpunit_hasMatchers()
+    public function __phpunit_hasMatchers(): bool
     {
-        return $this->__phpunit_getInvocationMocker()
+        return $this->object->getInvocationMocker()
             ->hasMatchers();
     }
 
@@ -48,7 +48,7 @@ class MockWrapper implements MockObject
      * @throws  ExpectationFailedException
      * @throws  LogicException
      */
-    public function __phpunit_verify(bool $unsetInvocationMocker = TRUE)
+    public function __phpunit_verify(bool $unsetInvocationMocker = TRUE): void
     {
         $this->object->verify();
         if ($unsetInvocationMocker) {
@@ -57,17 +57,9 @@ class MockWrapper implements MockObject
     }
 
     /**
-     * @return  InvocationMocker
-     */
-    public function __phpunit_getInvocationMocker()
-    {
-        return $this->object->getInvocationMocker();
-    }
-
-    /**
      * @throws  LogicException
      */
-    public function __phpunit_setOriginalObject($originalObject)
+    public function __phpunit_getInvocationMocker(): InvocationMocker
     {
         throw new LogicException('Not supported');
     }
@@ -75,7 +67,15 @@ class MockWrapper implements MockObject
     /**
      * @throws  LogicException
      */
-    public function __phpunit_setReturnValueGeneration(bool $returnValueGeneration)
+    public function __phpunit_setOriginalObject($originalObject): void
+    {
+        throw new LogicException('Not supported');
+    }
+
+    /**
+     * @throws  LogicException
+     */
+    public function __phpunit_setReturnValueGeneration(bool $returnValueGeneration): void
     {
         throw new LogicException('Not supported');
     }
@@ -83,8 +83,8 @@ class MockWrapper implements MockObject
     /**
      * @param  Invocation  $matcher
      */
-    public function expects(Invocation $matcher)
+    public function expects(Invocation $matcher): BuilderInvocationMocker
     {
-        return $this->object->expects($matcher);
+        throw new LogicException('Not supported');
     }
 }
