@@ -49,6 +49,6 @@ class QueryMatcher implements Invocation
     public function invoked(BaseInvocation $invocation)
     {}
 
-    public function verify()
+    public function verify(): void
     {}
 }

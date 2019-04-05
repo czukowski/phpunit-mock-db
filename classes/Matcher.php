@@ -110,7 +110,7 @@ class Matcher implements MatcherInvocation
     /**
      * @throws  ExpectationFailedException
      */
-    public function verify()
+    public function verify(): void
     {
         try {
             $this->invocationMatcher->verify();

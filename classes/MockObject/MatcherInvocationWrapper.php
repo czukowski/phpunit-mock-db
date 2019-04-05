@@ -51,7 +51,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
         return $this->invocation->matches($this->container->getMockObjectInvocation($invocation));
     }
 
-    public function verify()
+    public function verify(): void
     {
         $this->invocation->verify();
     }

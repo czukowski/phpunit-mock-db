@@ -109,7 +109,7 @@ class InvocationMocker implements MatcherCollection, Invokable
     /** 
      * @return  void
      */
-    public function verify()
+    public function verify(): void
     {
         foreach ($this->matchers as $matcher) {
             $matcher->verify();
