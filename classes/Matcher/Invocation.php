@@ -20,7 +20,8 @@ interface Invocation extends SelfDescribing, Verifiable
     function invoked(BaseInvocation $invocation);
 
     /**
-     * @param  BaseInvocation $invocation
+     * @param   BaseInvocation $invocation
+     * @return  boolean
      */
-    function matches(BaseInvocation $invocation);
+    function matches(BaseInvocation $invocation): bool;
 }
