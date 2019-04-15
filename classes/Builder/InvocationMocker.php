@@ -32,7 +32,7 @@ class InvocationMocker
     /**
      * @var  Matcher
      */
-    private $matcher;
+    protected $matcher;
 
     /**
      * @param  MatcherCollection   $collection
