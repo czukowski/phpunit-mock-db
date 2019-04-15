@@ -48,7 +48,7 @@ class InvocationMocker
     /**
      * @return  ConsecutiveCallsBuilder
      */
-    public function onConsecutiveCalls()
+    public function onConsecutiveCalls(): ConsecutiveCallsBuilder
     {
         $stub = new ConsecutiveCallsStub;
         $this->will($stub);
@@ -59,7 +59,7 @@ class InvocationMocker
      * @param   Constraint|string  $constraint
      * @return  $this
      */
-    public function query($constraint)
+    public function query($constraint): self
     {
         if (is_string($constraint)) {
             $constraint = new EqualsSQLQueriesConstraint($constraint);
@@ -72,7 +72,7 @@ class InvocationMocker
      * @param   Stub  $stub
      * @return  $this
      */
-    public function will(Stub $stub)
+    public function will(Stub $stub): self
     {
         $this->matcher->setStub($stub);
         return $this;
@@ -83,7 +83,7 @@ class InvocationMocker
      * @param   callable  $nextCallbacks ...
      * @return  $this
      */
-    public function willInvokeCallback(callable $callback, ...$nextCallbacks)
+    public function willInvokeCallback(callable $callback, ...$nextCallbacks): self
     {
         return $this->createStub(
             function ($argument) {
@@ -99,7 +99,7 @@ class InvocationMocker
      * @param   mixed  $nextSets ...
      * @return  $this
      */
-    public function willReturnResultSet($resultSet, ...$nextSets)
+    public function willReturnResultSet($resultSet, ...$nextSets): self
     {
         return $this->createStub(
             function ($argument) {
@@ -115,7 +115,7 @@ class InvocationMocker
      * @param   integer  $nextCounts ...
      * @return  $this
      */
-    public function willSetAffectedRows($count, ...$nextCounts)
+    public function willSetAffectedRows($count, ...$nextCounts): self
     {
         return $this->createStub(
             function ($argument) {
@@ -131,7 +131,7 @@ class InvocationMocker
      * @param   mixed  $nextValues ...
      * @return  $this
      */
-    public function willSetLastInsertId($value, ...$nextValues)
+    public function willSetLastInsertId($value, ...$nextValues): self
     {
         return $this->createStub(
             function ($argument) {
@@ -147,7 +147,7 @@ class InvocationMocker
      * @param   Throwable  $nextExceptions ...
      * @return  $this
      */
-    public function willThrowException(Throwable $exception, ...$nextExceptions)
+    public function willThrowException(Throwable $exception, ...$nextExceptions): self
     {
         return $this->createStub(
             function ($argument) {
@@ -164,7 +164,7 @@ class InvocationMocker
      * @param   array     $nextArguments
      * @return  $this
      */
-    private function createStub(callable $callback, $argument, array $nextArguments)
+    private function createStub(callable $callback, $argument, array $nextArguments): self
     {
         if ( ! $nextArguments) {
             return $this->will($callback($argument));

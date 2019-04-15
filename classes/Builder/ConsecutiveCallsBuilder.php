@@ -41,7 +41,7 @@ class ConsecutiveCallsBuilder
     /**
      * @return  InvocationMocker
      */
-    public function done()
+    public function done(): InvocationMocker
     {
         return $this->builder;
     }
@@ -50,7 +50,7 @@ class ConsecutiveCallsBuilder
      * @param   Stub  $stub
      * @return  $this
      */
-    public function will(Stub $stub)
+    public function will(Stub $stub): self
     {
         $this->stub->addStub($stub);
         return $this;
@@ -60,7 +60,7 @@ class ConsecutiveCallsBuilder
      * @param   callable  $callback
      * @return  $this
      */
-    public function willInvokeCallback(callable $callback)
+    public function willInvokeCallback(callable $callback): self
     {
         return $this->will(new InvokeCallbackStub($callback));
     }
@@ -69,7 +69,7 @@ class ConsecutiveCallsBuilder
      * @param   mixed  $resultSet
      * @return  $this
      */
-    public function willReturnResultSet($resultSet)
+    public function willReturnResultSet($resultSet): self
     {
         return $this->will(new ReturnResultSetStub($resultSet));
     }
@@ -78,7 +78,7 @@ class ConsecutiveCallsBuilder
      * @param   integer  $count
      * @return  $this
      */
-    public function willSetAffectedRows($count)
+    public function willSetAffectedRows($count): self
     {
         return $this->will(new SetAffectedRowsStub($count));
     }
@@ -87,7 +87,7 @@ class ConsecutiveCallsBuilder
      * @param   mixed  $value
      * @return  $this
      */
-    public function willSetLastInsertId($value)
+    public function willSetLastInsertId($value): self
     {
         return $this->will(new SetLastInsertIdStub($value));
     }
@@ -96,7 +96,7 @@ class ConsecutiveCallsBuilder
      * @param   Throwable  $exception
      * @return  $this
      */
-    public function willThrowException(Throwable $exception)
+    public function willThrowException(Throwable $exception): self
     {
         return $this->will(new ThrowExceptionStub($exception));
     }
