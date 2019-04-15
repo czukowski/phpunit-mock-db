@@ -96,7 +96,7 @@ class Matcher implements MatcherInvocation
      * @param   Invocation  $invocation
      * @return  boolean
      */
-    public function matches(Invocation $invocation)
+    public function matches(Invocation $invocation): bool
     {
         if ( ! $this->invocationMatcher->matches($invocation)) {
             return FALSE;
