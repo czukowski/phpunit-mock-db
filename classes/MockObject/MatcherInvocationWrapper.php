@@ -38,7 +38,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
     /**
      * @param  BaseInvocation  $invocation
      */
-    public function invoked(BaseInvocation $invocation)
+    public function invoked(BaseInvocation $invocation): void
     {
         $this->invocation->invoked($this->container->getMockObjectInvocation($invocation));
     }

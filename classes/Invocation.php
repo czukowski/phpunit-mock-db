@@ -43,5 +43,5 @@ interface Invocation
     /**
      * @param  iterable  $result
      */
-    function setResultSet($result): void;
+    function setResultSet(iterable $result): void;
 }
