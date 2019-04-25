@@ -18,12 +18,12 @@ interface Invocation
     /**
      * @return  integer|NULL
      */
-    function getAffectedRows();
+    function getAffectedRows(): ?int;
 
     /**
      * @param  integer  $count
      */
-    function setAffectedRows(int $count);
+    function setAffectedRows(int $count): void;
 
     /**
      * @return  mixed|NULL
@@ -33,15 +33,15 @@ interface Invocation
     /**
      * @param  mixed  $value
      */
-    function setLastInsertId($value);
+    function setLastInsertId($value): void;
 
     /**
      * @return  iterable|NULL
      */
-    function getResultSet();
+    function getResultSet(): ?iterable;
 
     /**
      * @param  iterable  $result
      */
-    function setResultSet($result);
+    function setResultSet(iterable $result): void;
 }

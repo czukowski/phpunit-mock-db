@@ -61,7 +61,6 @@ class MatcherTest extends Testcase
     public function testQueryMatcher(Constraint $constraint): void
     {
         $object = new Matcher($this->createMock(RecordedInvocation::class));
-        $this->assertNull($object->getQueryMatcher());
         $this->assertFalse($object->hasQueryMatcher());
         $matcher = new QueryMatcher($constraint);
         $object->setQueryMatcher($matcher);

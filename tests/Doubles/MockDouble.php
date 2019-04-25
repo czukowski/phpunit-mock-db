@@ -30,7 +30,7 @@ class MockDouble extends Mock
         return $this->invocationMocker;
     }
 
-    protected function getInvocationsContainer(): ?InvocationsContainer
+    protected function getInvocationsContainer(): InvocationsContainer
     {
         return $this->invocationsContainer !== NULL
             ? $this->invocationsContainer

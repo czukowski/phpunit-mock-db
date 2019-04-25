@@ -23,9 +23,9 @@ class InvocationMockerDouble extends InvocationMocker
         return parent::expects($matcher);
     }
 
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         $this->invoked = $invocation;
-        return parent::invoke($invocation);
+        parent::invoke($invocation);
     }
 }

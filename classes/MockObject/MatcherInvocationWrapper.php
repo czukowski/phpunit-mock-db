@@ -38,7 +38,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
     /**
      * @param  BaseInvocation  $invocation
      */
-    public function invoked(BaseInvocation $invocation)
+    public function invoked(BaseInvocation $invocation): void
     {
         $this->invocation->invoked($this->container->getMockObjectInvocation($invocation));
     }
@@ -68,7 +68,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
     /**
      * @return  boolean
      */
-    public function isAnyInvokedCount()
+    public function isAnyInvokedCount(): bool
     {
         return $this->invocation instanceof AnyInvokedCount;
     }
@@ -76,7 +76,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
     /**
      * @return  boolean
      */
-    public function isNeverInvokedCount()
+    public function isNeverInvokedCount(): bool
     {
         return $this->invocation instanceof InvokedCount && $this->invocation->isNever();
     }

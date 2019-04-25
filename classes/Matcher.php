@@ -40,7 +40,7 @@ class Matcher implements MatcherInvocation
     /**
      * @return  boolean
      */
-    public function hasMatchers()
+    public function hasMatchers(): bool
     {
         return ! $this->invocationMatcher->isAnyInvokedCount();
     }
@@ -48,7 +48,7 @@ class Matcher implements MatcherInvocation
     /**
      * @return  QueryMatcher
      */
-    public function getQueryMatcher()
+    public function getQueryMatcher(): QueryMatcher
     {
         return $this->queryMatcher;
     }
@@ -56,7 +56,7 @@ class Matcher implements MatcherInvocation
     /**
      * @return  boolean
      */
-    public function hasQueryMatcher()
+    public function hasQueryMatcher(): bool
     {
         return $this->queryMatcher !== NULL;
     }
@@ -65,7 +65,7 @@ class Matcher implements MatcherInvocation
      * @param   QueryMatcher  $matcher
      * @throws  RuntimeException
      */
-    public function setQueryMatcher(QueryMatcher $matcher)
+    public function setQueryMatcher(QueryMatcher $matcher): void
     {
         if ($this->hasQueryMatcher()) {
             throw new RuntimeException('Query matcher is already defined, cannot redefine');
@@ -76,7 +76,7 @@ class Matcher implements MatcherInvocation
     /**
      * @param  Stub  $stub
      */
-    public function setStub($stub)
+    public function setStub($stub): void
     {
         $this->stub = $stub;
     }
@@ -84,7 +84,7 @@ class Matcher implements MatcherInvocation
     /**
      * @param  Invocation  $invocation
      */
-    public function invoked(Invocation $invocation)
+    public function invoked(Invocation $invocation): void
     {
         $this->invocationMatcher->invoked($invocation);
         if ($this->stub) {

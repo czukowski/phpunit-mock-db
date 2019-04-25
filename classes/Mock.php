@@ -64,7 +64,7 @@ class Mock
     /**
      * @return  void
      */
-    public function verify()
+    public function verify(): void
     {
         $this->getInvocationMocker()
             ->verify();
@@ -73,7 +73,7 @@ class Mock
     /**
      * @return  InvocationMocker
      */
-    public function getInvocationMocker()
+    public function getInvocationMocker(): InvocationMocker
     {
         if ($this->invocationMocker === NULL) {
             $this->invocationMocker = new InvocationMocker;
@@ -84,15 +84,15 @@ class Mock
     /**
      * @return  void
      */
-    public function unsetInvocationMocker()
+    public function unsetInvocationMocker(): void
     {
         $this->invocationMocker = NULL;
     }
 
     /**
-     * @return  InvocationMocker
+     * @return  InvocationsContainer
      */
-    protected function getInvocationsContainer()
+    protected function getInvocationsContainer(): InvocationsContainer
     {
         if ($this->invocationsContainer === NULL) {
             $this->invocationsContainer = new InvocationsContainer;
@@ -113,7 +113,7 @@ class Mock
      * @param   boolean  $value
      * @return  $this
      */
-    public function setRequireMatch(bool $value)
+    public function setRequireMatch(bool $value): self
     {
         $this->getInvocationMocker()
             ->setRequireMatch($value);

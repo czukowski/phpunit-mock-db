@@ -28,7 +28,7 @@ class InvocationMocker implements MatcherCollection, Invokable
     /**
      * @param  MatcherInvocation  $matcher
      */
-    public function addMatcher(MatcherInvocation $matcher)
+    public function addMatcher(MatcherInvocation $matcher): void
     {
         $this->matchers[] = $matcher;
     }
@@ -36,7 +36,7 @@ class InvocationMocker implements MatcherCollection, Invokable
     /**
      * @return  boolean
      */
-    public function hasMatchers()
+    public function hasMatchers(): bool
     {
         return count($this->matchers) > 0;
     }
@@ -52,7 +52,7 @@ class InvocationMocker implements MatcherCollection, Invokable
     /**
      * @param  boolean  $value
      */
-    public function setRequireMatch(bool $value)
+    public function setRequireMatch(bool $value): void
     {
         $this->requireMatch = $value;
     }
@@ -70,7 +70,7 @@ class InvocationMocker implements MatcherCollection, Invokable
      * @param   Invocation  $invocation
      * @throws  ExpectationFailedException
      */
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         $invoked = 0;
         foreach ($this->matchers as $match) {
@@ -93,7 +93,7 @@ class InvocationMocker implements MatcherCollection, Invokable
      * @param   Invocation  $invocation
      * @return  boolean
      */
-    public function matches(Invocation $invocation)
+    public function matches(Invocation $invocation): bool
     {
         // Not sure what is this method for, other than implementing `Invokable` interface.
         // One with the same name from `PHPUnit\Framework\MockObject\InvocationMocker`
