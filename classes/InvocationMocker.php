@@ -70,7 +70,7 @@ class InvocationMocker implements MatcherCollection, Invokable
      * @param   Invocation  $invocation
      * @throws  ExpectationFailedException
      */
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         $invoked = 0;
         foreach ($this->matchers as $match) {

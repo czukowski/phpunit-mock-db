@@ -17,7 +17,7 @@ trait MockTrait
     /**
      * @return  Mock
      */
-    public function createDatabaseMock()
+    public function createDatabaseMock(): Mock
     {
         $mock = new Mock;
         $this->registerMockObject(new MockWrapper($mock));

@@ -13,10 +13,10 @@ interface RecordedInvocation extends Invocation
     /**
      * @return  boolean
      */
-    function isAnyInvokedCount();
+    function isAnyInvokedCount(): bool;
 
     /**
      * @return  boolean
      */
-    function isNeverInvokedCount();
+    function isNeverInvokedCount(): bool;
 }

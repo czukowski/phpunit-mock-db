@@ -68,7 +68,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
     /**
      * @return  boolean
      */
-    public function isAnyInvokedCount()
+    public function isAnyInvokedCount(): bool
     {
         return $this->invocation instanceof AnyInvokedCount;
     }
@@ -76,7 +76,7 @@ class MatcherInvocationWrapper implements RecordedInvocation
     /**
      * @return  boolean
      */
-    public function isNeverInvokedCount()
+    public function isNeverInvokedCount(): bool
     {
         return $this->invocation instanceof InvokedCount && $this->invocation->isNever();
     }

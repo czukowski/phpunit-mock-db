@@ -15,11 +15,11 @@ interface Invokable extends Verifiable
     /**
      * @param  Invocation  $invocation
      */
-    function invoke(Invocation $invocation);
+    function invoke(Invocation $invocation): void;
 
     /**
      * @param   Invocation  $invocation
      * @return  boolean
      */
-    function matches(Invocation $invocation);
+    function matches(Invocation $invocation): bool;
 }

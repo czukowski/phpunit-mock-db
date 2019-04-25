@@ -17,7 +17,7 @@ interface Invocation extends SelfDescribing, Verifiable
     /**
      * @param  BaseInvocation $invocation
      */
-    function invoked(BaseInvocation $invocation);
+    function invoked(BaseInvocation $invocation): void;
 
     /**
      * @param   BaseInvocation $invocation

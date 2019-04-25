@@ -17,7 +17,7 @@ class TestFailure
      * @param   Throwable  $error
      * @return  string
      */
-    public static function exceptionToString(Throwable $error)
+    public static function exceptionToString(Throwable $error): string
     {
         $message = FrameworkTestFailure::exceptionToString($error);
         return preg_replace('#^Method#', 'Database', $message);

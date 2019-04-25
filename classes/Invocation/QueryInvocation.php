@@ -13,11 +13,11 @@ use Cz\PHPUnit\MockDB\Invocation;
 class QueryInvocation implements Invocation
 {
     /**
-     * @var  integer
+     * @var  integer|NULL
      */
     private $affectedRows;
     /**
-     * @var  mixed
+     * @var  mixed|NULL
      */
     private $lastInsertId;
     /**
@@ -25,7 +25,7 @@ class QueryInvocation implements Invocation
      */
     private $query;
     /**
-     * @var  mixed
+     * @var  iterable|NULL
      */
     private $resultSet;
 
@@ -46,9 +46,9 @@ class QueryInvocation implements Invocation
     }
 
     /**
-     * @return  integer
+     * @return  integer|NULL
      */
-    public function getAffectedRows()
+    public function getAffectedRows(): ?int
     {
         return $this->affectedRows;
     }
@@ -56,7 +56,7 @@ class QueryInvocation implements Invocation
     /**
      * @param  integer  $count
      */
-    public function setAffectedRows(int $count)
+    public function setAffectedRows(int $count): void
     {
         $this->affectedRows = $count;
     }
@@ -72,15 +72,15 @@ class QueryInvocation implements Invocation
     /**
      * @param  mixed  $value
      */
-    public function setLastInsertId($value)
+    public function setLastInsertId($value): void
     {
         $this->lastInsertId = $value;
     }
 
     /**
-     * @return  iterable
+     * @return  iterable|NULL
      */
-    public function getResultSet()
+    public function getResultSet(): ?iterable
     {
         return $this->resultSet;
     }
@@ -88,7 +88,7 @@ class QueryInvocation implements Invocation
     /**
      * @param  iterable  $result
      */
-    public function setResultSet($result)
+    public function setResultSet(iterable $result): void
     {
         $this->resultSet = $result;
     }
