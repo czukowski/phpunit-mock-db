@@ -3,7 +3,8 @@
 namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
-    Cz\PHPUnit\MockDB\Testcase;
+    Cz\PHPUnit\MockDB\Testcase,
+    PHPUnit\Framework\MockObject\Invocation as MockObjectInvocation;
 
 /**
  * InvocationsContainerTest
@@ -22,7 +23,7 @@ class InvocationsContainerTest extends Testcase
         $previousInvocations = [];
         foreach ($invocations as $invocation) {
             $wrappedInvocation = $object->getMockObjectInvocation($invocation);
-            $this->assertInstanceOf(InvocationWrapper::class, $wrappedInvocation);
+            $this->assertInstanceOf(MockObjectInvocation::class, $wrappedInvocation);
             $sameWrappedInvocation = $object->getMockObjectInvocation($invocation);
             $this->assertSame($wrappedInvocation, $sameWrappedInvocation);
             foreach ($previousInvocations as $previousWrappedInvocation) {

@@ -2,7 +2,8 @@
 
 namespace Cz\PHPUnit\MockDB\MockObject;
 
-use Cz\PHPUnit\MockDB\Invocation as BaseInvocation;
+use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
+    PHPUnit\Framework\MockObject\Invocation as MockObjectInvocation;
 
 /**
  * InvocationsContainer
@@ -17,13 +18,13 @@ class InvocationsContainer
      */
     private $baseInvocations = [];
     /**
-     * @var  array  InvocationWrapper[]
+     * @var  array  MockObjectInvocation[]
      */
     private $mockObjectInvocations = [];
 
     /**
      * @param   BaseInvocation  $invocation
-     * @return  InvocationWrapper
+     * @return  MockObjectInvocation
      */
     public function getMockObjectInvocation(BaseInvocation $invocation)
     {
@@ -32,7 +33,7 @@ class InvocationsContainer
                 return $this->mockObjectInvocations[$i];
             }
         }
-        $mockObjectInvocation = new InvocationWrapper($invocation);
+        $mockObjectInvocation = new MockObjectInvocation(get_class($invocation), '', [], '', $invocation);
         $this->baseInvocations[] = $invocation;
         $this->mockObjectInvocations[] = $mockObjectInvocation;
         return $mockObjectInvocation;
