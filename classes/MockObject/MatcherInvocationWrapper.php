@@ -4,9 +4,9 @@ namespace Cz\PHPUnit\MockDB\MockObject;
 
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
-    PHPUnit\Framework\MockObject\Matcher\AnyInvokedCount,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation,
-    PHPUnit\Framework\MockObject\Matcher\InvokedCount;
+    PHPUnit\Framework\MockObject\Rule\AnyInvokedCount,
+    PHPUnit\Framework\MockObject\Rule\InvokedCount,
+    PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
 /**
  * MatcherInvocationWrapper
@@ -21,15 +21,15 @@ class MatcherInvocationWrapper implements RecordedInvocation
      */
     private $container;
     /**
-     * @var  MockObjectMatcherInvocation
+     * @var  InvocationOrder
      */
     private $invocation;
 
     /**
-     * @param  MockObjectMatcherInvocation  $invocation
-     * @param  InvocationsContainer         $container
+     * @param  InvocationOrder       $invocation
+     * @param  InvocationsContainer  $container
      */
-    public function __construct(MockObjectMatcherInvocation $invocation, InvocationsContainer $container)
+    public function __construct(InvocationOrder $invocation, InvocationsContainer $container)
     {
         $this->container = $container;
         $this->invocation = $invocation;

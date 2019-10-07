@@ -16,7 +16,7 @@
     },
     "require": {
         "czukowski/phpunit-sql": "^8.0",
-        "phpunit/phpunit": "^8.2"
+        "phpunit/phpunit": "^8.4"
     },
     "autoload": {
         "psr-4": {

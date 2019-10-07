@@ -7,9 +7,8 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
-    PHPUnit\Framework\Exception,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation,
-    PHPUnit\Util\InvalidArgumentHelper;
+    PHPUnit\Framework\MockObject\Rule\InvocationOrder,
+    PHPUnit\Framework\InvalidArgumentException;
 
 /**
  * Mock
@@ -29,20 +28,19 @@ class Mock
     private $invocationMocker;
 
     /**
-     * @param   MatcherInvocation|MockObjectMatcherInvocation  $matcher
+     * @param   MatcherInvocation|InvocationOrder  $matcher
      * @return  InvocationMockerBuilder
-     * @throws  Exception
+     * @throws  InvalidArgumentException
      */
     public function expects($matcher)
     {
-        if ($matcher instanceof MockObjectMatcherInvocation) {
+        if ($matcher instanceof InvocationOrder) {
             $matcher = new MatcherInvocationWrapper($matcher, $this->getInvocationsContainer());
         }
         if ( ! $matcher instanceof MatcherInvocation) {
-            throw InvalidArgumentHelper::factory(
+            throw InvalidArgumentException::create(
                 1,
-                sprintf('object implementing interface %s\Matcher\Invocation', __NAMESPACE__),
-                $matcher
+                sprintf('object implementing interface %s\Matcher\Invocation', __NAMESPACE__)
             );
         }
         return $this->getInvocationMocker()

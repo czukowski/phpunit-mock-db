@@ -9,7 +9,7 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
     PHPUnit\Framework\Exception as FrameworkException,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation;
+    PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
 /**
  * MockTest
@@ -65,7 +65,7 @@ class MockTest extends Testcase
         return [$matcher, $matcher];
     }
 
-    private function createExpectsTestCaseWrappedInvocationMatcher(MockObjectMatcherInvocation $matcher): array
+    private function createExpectsTestCaseWrappedInvocationMatcher(InvocationOrder $matcher): array
     {
         return [
             $matcher,

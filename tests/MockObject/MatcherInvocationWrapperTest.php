@@ -5,7 +5,7 @@ namespace Cz\PHPUnit\MockDB\MockObject;
 use Cz\PHPUnit\MockDB\Invocation as BaseInvocation,
     Cz\PHPUnit\MockDB\Testcase,
     PHPUnit\Framework\MockObject\Invocation as MockObjectInvocation,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation;
+    PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
 /**
  * MatcherInvocationWrapperTest
@@ -20,15 +20,13 @@ class MatcherInvocationWrapperTest extends Testcase
      */
     public function testInvoked(BaseInvocation $baseInvocation, MockObjectInvocation $wrappedInvocation): void
     {
-        $invocation = $this->createMatcherInvocation();
-        $invocation->expects($this->once())
-            ->method('invoked')
-            ->with($wrappedInvocation);
+        $invocation = $this->createInvocationOrder();
         $object = $this->createObject(
             $invocation,
             $this->createContainer($baseInvocation, $wrappedInvocation)
         );
         $object->invoked($baseInvocation);
+        $this->assertSame(1, $invocation->getInvocationCount());
     }
 
     public function provideInvoked(): array
@@ -46,7 +44,7 @@ class MatcherInvocationWrapperTest extends Testcase
      */
     public function testMatches(BaseInvocation $baseInvocation, MockObjectInvocation $wrappedInvocation, bool $expected): void
     {
-        $invocation = $this->createMatcherInvocation();
+        $invocation = $this->createInvocationOrder();
         $invocation->expects($this->once())
             ->method('matches')
             ->with($wrappedInvocation)
@@ -80,7 +78,7 @@ class MatcherInvocationWrapperTest extends Testcase
      */
     public function testVerify(): void
     {
-        $invocation = $this->createMatcherInvocation();
+        $invocation = $this->createInvocationOrder();
         $invocation->expects($this->once())
             ->method('verify');
         $object = $this->createObject($invocation);
@@ -90,7 +88,7 @@ class MatcherInvocationWrapperTest extends Testcase
     /**
      * @dataProvider  provideIsAnyInvokedCount
      */
-    public function testIsAnyInvokedCount(MockObjectMatcherInvocation $invocation, bool $expected): void
+    public function testIsAnyInvokedCount(InvocationOrder $invocation, bool $expected): void
     {
         $object = $this->createObject($invocation);
         $actual = $object->isAnyInvokedCount();
@@ -101,7 +99,7 @@ class MatcherInvocationWrapperTest extends Testcase
     {
         return [
             [
-                $this->createMock(MockObjectMatcherInvocation::class),
+                $this->createMock(InvocationOrder::class),
                 FALSE,
             ],
             [
@@ -126,7 +124,7 @@ class MatcherInvocationWrapperTest extends Testcase
     /**
      * @dataProvider  provideIsNeverInvokedCount
      */
-    public function testIsNeverInvokedCount(MockObjectMatcherInvocation $invocation, bool $expected): void
+    public function testIsNeverInvokedCount(InvocationOrder $invocation, bool $expected): void
     {
         $object = $this->createObject($invocation);
         $actual = $object->isNeverInvokedCount();
@@ -137,7 +135,7 @@ class MatcherInvocationWrapperTest extends Testcase
     {
         return [
             [
-                $this->createMock(MockObjectMatcherInvocation::class),
+                $this->createMock(InvocationOrder::class),
                 FALSE,
             ],
             [
@@ -176,9 +174,9 @@ class MatcherInvocationWrapperTest extends Testcase
         return $object;
     }
 
-    private function createMatcherInvocation(): MockObjectMatcherInvocation
+    private function createInvocationOrder(): InvocationOrder
     {
-        return $this->createMock(MockObjectMatcherInvocation::class);
+        return $this->getMockForAbstractClass(InvocationOrder::class);
     }
 
     private function createMockObjectInvocation(): MockObjectInvocation
@@ -187,7 +185,7 @@ class MatcherInvocationWrapperTest extends Testcase
     }
 
     private function createObject(
-        MockObjectMatcherInvocation $invocation,
+        InvocationOrder $invocation,
         InvocationsContainer $container = NULL
     ): MatcherInvocationWrapper
     {

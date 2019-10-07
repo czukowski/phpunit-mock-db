@@ -9,7 +9,7 @@ use Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\SQL\EqualsSQLQueriesConstraint,
     PHPUnit\Framework\Constraint\Constraint,
     PHPUnit\Framework\ExpectationFailedException,
-    PHPUnit\Framework\MockObject\Matcher\Invocation as MockObjectMatcherInvocation,
+    PHPUnit\Framework\MockObject\Rule\InvocationOrder,
     Throwable;
 
 /**
@@ -50,7 +50,7 @@ class MatcherTest extends Testcase
         return $mock;
     }
 
-    private function createMatcherInvocationWrapper(MockObjectMatcherInvocation $invocationMatcher): MatcherInvocationWrapper
+    private function createMatcherInvocationWrapper(InvocationOrder $invocationMatcher): MatcherInvocationWrapper
     {
         return new MatcherInvocationWrapper($invocationMatcher, new InvocationsContainer);
     }

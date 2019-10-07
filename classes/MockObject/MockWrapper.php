@@ -5,9 +5,10 @@ namespace Cz\PHPUnit\MockDB\MockObject;
 use Cz\PHPUnit\MockDB\Mock,
     PHPUnit\Framework\ExpectationFailedException,
     PHPUnit\Framework\MockObject\Builder\InvocationMocker as BuilderInvocationMocker,
-    PHPUnit\Framework\MockObject\Matcher\Invocation,
-    PHPUnit\Framework\MockObject\MockObject,
+    PHPUnit\Framework\MockObject\InvocationHandler,
     PHPUnit\Framework\MockObject\InvocationMocker,
+    PHPUnit\Framework\MockObject\MockObject,
+    PHPUnit\Framework\MockObject\Rule\InvocationOrder,
     LogicException;
 
 /**
@@ -59,6 +60,14 @@ class MockWrapper implements MockObject
     /**
      * @throws  LogicException
      */
+    public function __phpunit_getInvocationHandler(): InvocationHandler
+    {
+        throw new LogicException('Not supported');
+    }
+
+    /**
+     * @throws  LogicException
+     */
     public function __phpunit_getInvocationMocker(): InvocationMocker
     {
         throw new LogicException('Not supported');
@@ -81,10 +90,11 @@ class MockWrapper implements MockObject
     }
 
     /**
-     * @param  Invocation  $matcher
+     * @param  InvocationOrder  $matcher
      */
-    public function expects(Invocation $matcher): BuilderInvocationMocker
+    public function expects(InvocationOrder $matcher): BuilderInvocationMocker
     {
         throw new LogicException('Not supported');
     }
+
 }
