@@ -8,6 +8,7 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
+    LogicException,
     PHPUnit\Framework\Exception as FrameworkException,
     PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
@@ -80,13 +81,14 @@ class MockTest extends Testcase
     /**
      * @dataProvider  provideInvoke
      */
-    public function testInvoke($query, $expected): void
+    public function testInvoke(array $arguments, $expected): void
     {
         $invocationMocker = new Doubles\InvocationMockerDouble;
         $invocationMocker->setRequireMatch(FALSE);
         $object = new Doubles\MockDouble($invocationMocker);
 
-        $actual = $object->invoke($query);
+        $this->expectExceptionFromArgument($expected);
+        $actual = $object->invoke(...$arguments);
         $this->assertSame($invocationMocker->invoked, $actual);
         if (is_callable($expected)) {
             call_user_func($expected, $actual);
@@ -99,18 +101,21 @@ class MockTest extends Testcase
     public function provideInvoke(): array
     {
         return [
-            $this->createInvokeTestCaseString('SELECT * FROM `t`'),
+            $this->createInvokeTestCaseString('SELECT * FROM `t`', []),
+            $this->createInvokeTestCaseString('SELECT * FROM `t` WHERE `c` = ?', [1]),
             $this->createInvokeTestCaseInvocationInstance('SELECT * FROM `t`'),
+            $this->createInvokeTestCaseInvocationInstanceAnd2ndArgument('SELECT * FROM `t`', []),
         ];
     }
 
-    private function createInvokeTestCaseString(string $query): array
+    private function createInvokeTestCaseString(string $query, array $parameters): array
     {
         return [
-            $query,
-            function ($actual) use ($query) {
+            [$query, $parameters],
+            function ($actual) use ($query, $parameters) {
                 $this->assertInstanceOf(QueryInvocation::class, $actual);
                 $this->assertSame($query, $actual->getQuery());
+                $this->assertSame($parameters, $actual->getParameters());
             }
         ];
     }
@@ -118,7 +123,15 @@ class MockTest extends Testcase
     private function createInvokeTestCaseInvocationInstance(string $query): array
     {
         $invocation = new QueryInvocation($query);
-        return [$invocation, $invocation];
+        return [[$invocation], $invocation];
+    }
+
+    private function createInvokeTestCaseInvocationInstanceAnd2ndArgument(string $query, array $parameters): array
+    {
+        return [
+            [new QueryInvocation($query), $parameters],
+            new LogicException,
+        ];
     }
 
     /**

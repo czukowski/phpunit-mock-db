@@ -2,8 +2,11 @@
 
 namespace Cz\PHPUnit\MockDB;
 
-use Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
+use Cz\PHPUnit\MockDB\Matcher\AnyParameters,
+    Cz\PHPUnit\MockDB\Matcher\ParametersMatcher,
+    Cz\PHPUnit\MockDB\Matcher\ParametersMatch,
     Cz\PHPUnit\MockDB\Matcher\QueryMatcher,
+    Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\MockObject\InvocationsContainer,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
     Cz\PHPUnit\SQL\EqualsSQLQueriesConstraint,
@@ -76,6 +79,29 @@ class MatcherTest extends Testcase
             [$this->createMock(Constraint::class)],
             [$this->stringStartsWith('SELECT')],
             [new EqualsSQLQueriesConstraint('SELECT * FROM `t`')],
+        ];
+    }
+
+    /**
+     * @dataProvider  provideParametersMatcher
+     */
+    public function testParametersMatcher(ParametersMatcher $rule): void
+    {
+        $object = new Matcher($this->createMock(RecordedInvocation::class));
+        $this->assertFalse($object->hasParametersMatcher());
+        $object->setParametersMatcher($rule);
+        $this->assertSame($rule, $object->getParametersMatcher());
+        $this->assertTrue($object->hasParametersMatcher());
+        $this->expectException('RuntimeException');
+        $object->setParametersMatcher($rule);
+    }
+
+    public function provideParametersMatcher(): array
+    {
+        return [
+            [$this->createMock(ParametersMatcher::class)],
+            [new ParametersMatch([1, 2])],
+            [new AnyParameters],
         ];
     }
 
@@ -288,7 +314,7 @@ class MatcherTest extends Testcase
                 ],
                 'isNeverInvokedCount' => [
                     [
-                        'expects' => ! $isAny ? $this->once() : $this->never(),
+                        'expects' => $this->once(),
                         'will' => $this->returnValue($isNever),
                     ],
                 ],
@@ -304,6 +330,140 @@ class MatcherTest extends Testcase
                 ],
             ],
             ! $isAny && ! $isNever && $willVerify ? NULL : new ExpectationFailedException(''),
+        ];
+    }
+
+    /**
+     * @dataProvider  provideVerifyParametersMatcher
+     */
+    public function testVerifyParametersMatcher(
+        array $invocationMatcherSetup,
+        array $parametersMatcherSetup,
+        ?Throwable $expected
+    ): void
+    {
+        $invocationMatcher = $this->createMock(RecordedInvocation::class);
+        $this->setupMockObject($invocationMatcher, $invocationMatcherSetup);
+
+        $object = new Matcher($invocationMatcher);
+        $parametersMatcher = $this->createMock(ParametersMatcher::class);
+        $this->setupMockObject($parametersMatcher, $parametersMatcherSetup);
+        $object->setParametersMatcher($parametersMatcher);
+        $this->expectExceptionFromArgument($expected);
+
+        $actual = $object->verify();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function provideVerifyParametersMatcher(): array
+    {
+        return [
+            $this->createVerifyParametersMatcherTestCase(FALSE, FALSE, TRUE),
+            $this->createVerifyParametersMatcherTestCase(FALSE, FALSE, FALSE),
+            $this->createVerifyParametersMatcherTestCase(TRUE, FALSE, NULL),
+            $this->createVerifyParametersMatcherTestCase(TRUE, TRUE, NULL),
+            $this->createVerifyParametersMatcherTestCase(FALSE, TRUE, NULL),
+        ];
+    }
+
+    private function createVerifyParametersMatcherTestCase(bool $isAny, bool $isNever, ?bool $willVerify): array
+    {
+        return [
+            [
+                'verify' => [
+                    [
+                        'expects' => $this->once(),
+                    ],
+                ],
+                'isAnyInvokedCount' => [
+                    [
+                        'expects' => $this->once(),
+                        'will' => $this->returnValue($isAny),
+                    ],
+                ],
+                'isNeverInvokedCount' => [
+                    [
+                        'expects' => $this->once(),
+                        'will' => $this->returnValue($isNever),
+                    ],
+                ],
+            ],
+            [
+                'verify' => [
+                    [
+                        'expects' => ! $isAny && ! $isNever ? $this->once() : $this->never(),
+                        'will' => $willVerify
+                            ? $this->returnValue(NULL)
+                            : $this->throwException(new ExpectationFailedException('Parameters matcher failed')),
+                    ],
+                ],
+            ],
+            ! $isAny && ! $isNever && $willVerify ? NULL : new ExpectationFailedException(''),
+        ];
+    }
+
+    /**
+     * @dataProvider  provideToString
+     */
+    public function testToString(
+        ?QueryMatcher $queryMatcher,
+        ?ParametersMatcher $parametersRule,
+        string $expected
+    ): void
+    {
+        $invocationMatcher = $this->createMock(RecordedInvocation::class);
+        $this->setupMockObject(
+            $invocationMatcher,
+            [
+                'toString' => [
+                    [
+                        'expects' => $this->once(),
+                        'will' => $this->returnValue('an invocation'),
+                    ]
+                ],
+            ]
+        );
+
+        $object = new Matcher($invocationMatcher);
+        if ($queryMatcher !== NULL) {
+            $object->setQueryMatcher($queryMatcher);
+        }
+        if ($parametersRule !== NULL) {
+            $object->setParametersMatcher($parametersRule);
+        }
+
+        $actual = $object->toString();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function provideToString(): array
+    {
+        return [
+            [
+                NULL,
+                NULL,
+                'an invocation',
+            ],
+            [
+                new QueryMatcher($this->anything()),
+                NULL,
+                'an invocation where query is anything',
+            ],
+            [
+                new QueryMatcher($this->equalTo('SELECT * FROM `t1`')),
+                NULL,
+                "an invocation where query is equal to 'SELECT * FROM `t1`'",
+            ],
+            [
+                NULL,
+                new AnyParameters,
+                "an invocation with any parameters",
+            ],
+            [
+                new QueryMatcher($this->equalTo('SELECT * FROM `t1` WHERE `c` = ?')),
+                new ParametersMatch([1]),
+                "an invocation where query is equal to 'SELECT * FROM `t1` WHERE `c` = ?' with parameter 1 is identical to 1",
+            ],
         ];
     }
 
