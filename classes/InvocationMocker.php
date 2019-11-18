@@ -6,7 +6,8 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\Matcher\Invocation as MatcherInvocation,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Stub\MatcherCollection,
-    PHPUnit\Framework\ExpectationFailedException;
+    PHPUnit\Framework\ExpectationFailedException,
+    SebastianBergmann\Exporter\Exporter;
 
 /**
  * InvocationMocker
@@ -81,7 +82,7 @@ class InvocationMocker implements MatcherCollection, Invokable
         }
         if ( ! $invoked && $this->requireMatch) {
             $parameters = $invocation->getParameters();
-            $exporter = new \SebastianBergmann\Exporter\Exporter;
+            $exporter = new Exporter;
 
             throw new ExpectationFailedException(
                 sprintf(
