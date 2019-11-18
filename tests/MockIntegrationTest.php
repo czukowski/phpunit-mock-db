@@ -331,6 +331,30 @@ class MockIntegrationTest extends Testcase
                 TRUE,
             ],
             /**
+             * $mock->expects($this->exactly(2))
+             *     ->query('SELECT * FROM `t2` WHERE `c` = ?')
+             *     ->withAnyParameters()
+             *     ->willReturnResultSet($resultSet1);
+             * $mock->invoke('SELECT * FROM `t1` WHERE `c` = ?');
+             */
+            'Match with any parameters but call without any' => [
+                [
+                    [
+                        'expects' => $this->exactly(2),
+                        'query' => 'SELECT * FROM `t2` WHERE `c` = ?',
+                        'withAnyParameters' => [],
+                        'will' => new Stub\ReturnResultSetStub($resultSet1),
+                    ],
+                ],
+                [
+                    [
+                        'invoke' => ['SELECT * FROM `t2` WHERE `c` = ?'],
+                        'expected' => $this->createExpectationFailedException(),
+                    ],
+                ],
+                FALSE,
+            ],
+            /**
              * $mock->expects($this->at(1))
              *     ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
              *     ->with([1, 2, 3])

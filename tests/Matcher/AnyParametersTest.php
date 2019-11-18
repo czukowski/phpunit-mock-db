@@ -20,12 +20,26 @@ class AnyParametersTest extends Testcase
         $this->assertSame('with any parameters', $actual);
     }
 
-    public function testMatches(): void
+    /**
+     * @dataProvider  provideMatches
+     */
+    public function testMatches(array $parameters, bool $expected): void
     {
         $object = $this->createObject();
         $invocation = $this->createMock(BaseInvocation::class);
+        $invocation->expects($this->once())
+            ->method('getParameters')
+            ->willReturn($parameters);
         $actual = $object->matches($invocation);
-        $this->assertTrue($actual);
+        $this->assertSame($expected, $actual);
+    }
+
+    public function provideMatches(): array
+    {
+        return [
+            [[], FALSE],
+            [[1], TRUE],
+        ];
     }
 
     public function testInvoked(): void

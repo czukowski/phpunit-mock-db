@@ -26,7 +26,7 @@ class AnyParameters implements ParametersMatcher
      */
     public function matches(BaseInvocation $invocation): bool
     {
-        return TRUE;
+        return $invocation->getParameters() !== [];
     }
 
     /**
