@@ -80,10 +80,16 @@ class InvocationMocker implements MatcherCollection, Invokable
             }
         }
         if ( ! $invoked && $this->requireMatch) {
+            $parameters = $invocation->getParameters();
+            $exporter = new \SebastianBergmann\Exporter\Exporter;
+
             throw new ExpectationFailedException(
                 sprintf(
-                    "No matcher found for query\n%s",
-                    $invocation->getQuery()
+                    "No matcher found for query\n%s%s",
+                    $invocation->getQuery(),
+                    $parameters !== []
+                        ? sprintf("\nwith parameters: [%s]", $exporter->shortenedRecursiveExport($parameters))
+                        : ''
                 )
             );
         }
