@@ -387,11 +387,12 @@ class MockIntegrationTest extends Testcase
             ],
             /**
              * $mock->expects($this->exactly(3))
-             *     ->query('INSERT INTO `t1` VALUES ("a", "b", "c")')
+             *     ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
+             *     ->with([1, 2, 3])
              *     ->willSetLastInsertId(1, 2, 3);
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
              */
             'Match with query matchers and parameters, with consecutive calls' => [
                 [
@@ -487,13 +488,12 @@ class MockIntegrationTest extends Testcase
                     [
                         'expects' => $this->once(),
                         'query' => $this->stringStartsWith('SELECT'),
-                        'with' => [1],
                         'will' => new Stub\ReturnResultSetStub($resultSet1),
                     ],
                 ],
                 [
                     [
-                        'invoke' => ['SELECT * FROM `t` WHERE `c` = ?', [1]],
+                        'invoke' => ['SELECT * FROM `t` WHERE `c` = 1'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet1,
                     ],
@@ -524,16 +524,17 @@ class MockIntegrationTest extends Testcase
             ],
             /**
              * $mock->expects($this->exactly(4))
-             *     ->query('INSERT INTO `t1` VALUES ("a", "b", "c")')
+             *     ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
+             *     ->with(['a', 'b', 'c'])
              *     ->onConsecutiveCalls()
              *     ->willSetLastInsertId(1)
              *     ->willSetLastInsertId(2)
              *     ->willThrowException(new RuntimeException('Deadlock'))
              *     ->willSetLastInsertId(3);
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
              */
             'Match with query matchers, with consecutive calls builder' => [
                 [
