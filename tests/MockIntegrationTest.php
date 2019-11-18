@@ -37,6 +37,12 @@ class MockIntegrationTest extends Testcase
             if (isset($options['query'])) {
                 $im = $im->query($options['query']);
             }
+            if (isset($options['with'])) {
+                $im = $im->with($options['with']);
+            }
+            if (isset($options['withAnyParameters'])) {
+                $im = $im->withAnyParameters();
+            }
             if (isset($options['will'])) {
                 $im = $im->will($options['will']);
             }
@@ -54,7 +60,7 @@ class MockIntegrationTest extends Testcase
     {
         foreach ($invocations as $options) {
             try {
-                $invocation = $mock->invoke($options['invoke']);
+                $invocation = $mock->invoke(...$options['invoke']);
             }
             catch (Throwable $e) {
                 if ( ! $options['expected'] instanceof Throwable) {
@@ -90,7 +96,7 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT * FROM `t`',
+                        'invoke' => ['SELECT * FROM `t`'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet1,
                     ],
@@ -111,7 +117,7 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT * FROM `t`',
+                        'invoke' => ['SELECT * FROM `t`'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet1,
                     ],
@@ -161,12 +167,12 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT * FROM `t1`',
+                        'invoke' => ['SELECT * FROM `t1`'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet1,
                     ],
                     [
-                        'invoke' => 'SELECT * FROM `t2`',
+                        'invoke' => ['SELECT * FROM `t2`'],
                         'expected' => $this->createExpectationFailedException(),
                     ],
                 ],
@@ -186,7 +192,7 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT * FROM `t1`',
+                        'invoke' => ['SELECT * FROM `t1`'],
                         'expected' => $this->createExpectationFailedException(),
                     ],
                 ],
@@ -217,12 +223,12 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT  *  FROM  `t1`',
+                        'invoke' => ['SELECT  *  FROM  `t1`'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet1,
                     ],
                     [
-                        'invoke' => 'SELECT  *  FROM  `t2`',
+                        'invoke' => ['SELECT  *  FROM  `t2`'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet2,
                     ],
@@ -230,29 +236,152 @@ class MockIntegrationTest extends Testcase
                 TRUE,
             ],
             /**
+             * $mock->expects($this->once())
+             *     ->query('SELECT * FROM `t2` WHERE `c` = ?')
+             *     ->with([2])
+             *     ->willReturnResultSet($resultSet2);
+             * $mock->expects($this->once())
+             *     ->query('SELECT * FROM `t2` WHERE `c` = ?')
+             *     ->with([1])
+             *     ->willReturnResultSet($resultSet1);
+             * $mock->invoke('SELECT * FROM `t1` WHERE `c` = ?', [1]);
+             * $mock->invoke('SELECT * FROM `t1` WHERE `c` = ?', [2]);
+             */
+            'Match with query matcher and parameters' => [
+                [
+                    [
+                        'expects' => $this->once(),
+                        'query' => 'SELECT * FROM `t2` WHERE `c` = ?',
+                        'with' => [2],
+                        'will' => new Stub\ReturnResultSetStub($resultSet2),
+                    ],
+                    [
+                        'expects' => $this->once(),
+                        'query' => 'SELECT * FROM `t2` WHERE `c` = ?',
+                        'with' => [1],
+                        'will' => new Stub\ReturnResultSetStub($resultSet1),
+                    ],
+                ],
+                [
+                    [
+                        'invoke' => ['SELECT * FROM `t2` WHERE `c` = ?', [1]],
+                        'result' => 'getResultSet',
+                        'expected' => $resultSet1,
+                    ],
+                    [
+                        'invoke' => ['SELECT * FROM `t2` WHERE `c` = ?', [2]],
+                        'result' => 'getResultSet',
+                        'expected' => $resultSet2,
+                    ],
+                ],
+                TRUE,
+            ],
+            /**
+             * $mock->expects($this->once())
+             *     ->query('SELECT * FROM `t2` WHERE `c` = ?')
+             *     ->with([1])
+             *     ->willReturnResultSet($resultSet1);
+             * $mock->invoke('SELECT * FROM `t1` WHERE `c` = ?', [2]);
+             */
+            'Match incorrectly with query matcher and parameters' => [
+                [
+                    [
+                        'expects' => $this->once(),
+                        'query' => 'SELECT * FROM `t2` WHERE `c` = ?',
+                        'with' => [1],
+                        'will' => new Stub\ReturnResultSetStub($resultSet1),
+                    ],
+                ],
+                [
+                    [
+                        'invoke' => ['SELECT * FROM `t2` WHERE `c` = ?', [2]],
+                        'expected' => $this->createExpectationFailedException(),
+                    ],
+                ],
+                FALSE,
+            ],
+            /**
+             * $mock->expects($this->exactly(2))
+             *     ->query('SELECT * FROM `t2` WHERE `c` = ?')
+             *     ->withAnyParameters()
+             *     ->willReturnResultSet($resultSet1);
+             * $mock->invoke('SELECT * FROM `t1` WHERE `c` = ?', [2]);
+             */
+            'Match with query matcher and any parameters' => [
+                [
+                    [
+                        'expects' => $this->exactly(2),
+                        'query' => 'SELECT * FROM `t2` WHERE `c` = ?',
+                        'withAnyParameters' => [],
+                        'will' => new Stub\ReturnResultSetStub($resultSet1),
+                    ],
+                ],
+                [
+                    [
+                        'invoke' => ['SELECT * FROM `t2` WHERE `c` = ?', [2]],
+                        'result' => 'getResultSet',
+                        'expected' => $resultSet1,
+                    ],
+                    [
+                        'invoke' => ['SELECT * FROM `t2` WHERE `c` = ?', [3]],
+                        'result' => 'getResultSet',
+                        'expected' => $resultSet1,
+                    ],
+                ],
+                TRUE,
+            ],
+            /**
+             * $mock->expects($this->exactly(2))
+             *     ->query('SELECT * FROM `t2` WHERE `c` = ?')
+             *     ->withAnyParameters()
+             *     ->willReturnResultSet($resultSet1);
+             * $mock->invoke('SELECT * FROM `t1` WHERE `c` = ?');
+             */
+            'Match with any parameters but call without any' => [
+                [
+                    [
+                        'expects' => $this->exactly(2),
+                        'query' => 'SELECT * FROM `t2` WHERE `c` = ?',
+                        'withAnyParameters' => [],
+                        'will' => new Stub\ReturnResultSetStub($resultSet1),
+                    ],
+                ],
+                [
+                    [
+                        'invoke' => ['SELECT * FROM `t2` WHERE `c` = ?'],
+                        'expected' => $this->createExpectationFailedException(),
+                    ],
+                ],
+                FALSE,
+            ],
+            /**
              * $mock->expects($this->at(1))
-             *     ->query('INSERT INTO `t1` VALUES (1, 2, 3)')
+             *     ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
+             *     ->with([1, 2, 3])
              *     ->willSetLastInsertId(1);
              * $mock->expects($this->at(2))
-             *     ->query('INSERT INTO `t1` VALUES (1, 2, 3)')
+             *     ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
+             *     ->with([1, 2, 3])
              *     ->willSetLastInsertId(2);
              * $mock->expects($this->once())
              *     ->query('SELECT * FROM `t1`')
              *     ->willReturnResultSet($resultSet1);
              * $mock->invoke('SELECT * FROM `t1`');
-             * $mock->invoke('INSERT INTO `t1` VALUES (1, 2, 3)');
-             * $mock->invoke('INSERT INTO `t1` VALUES (1, 2, 3)');
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
              */
-            'Match mixed queries with query matchers, once each' => [
+            'Match mixed queries with query matchers and parameters, once each' => [
                 [
                     [
                         'expects' => $this->at(1),
-                        'query' => 'INSERT INTO `t1` VALUES (1, 2, 3)',
+                        'query' => 'INSERT INTO `t1` VALUES (?, ?, ?)',
+                        'with' => [1, 2, 3],
                         'will' => new Stub\SetLastInsertIdStub(1),
                     ],
                     [
                         'expects' => $this->at(2),
-                        'query' => 'INSERT INTO `t1` VALUES (1, 2, 3)',
+                        'query' => 'INSERT INTO `t1` VALUES (?, ?, ?)',
+                        'with' => [1, 2, 3],
                         'will' => new Stub\SetLastInsertIdStub(2),
                     ],
                     [
@@ -263,17 +392,17 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT * FROM  `t1`',
+                        'invoke' => ['SELECT * FROM  `t1`'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet1,
                     ],
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES (1, 2, 3)',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]],
                         'result' => 'getLastInsertId',
                         'expected' => 1,
                     ],
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES (1, 2, 3)',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]],
                         'result' => 'getLastInsertId',
                         'expected' => 2,
                     ],
@@ -282,17 +411,19 @@ class MockIntegrationTest extends Testcase
             ],
             /**
              * $mock->expects($this->exactly(3))
-             *     ->query('INSERT INTO `t1` VALUES ("a", "b", "c")')
+             *     ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
+             *     ->with([1, 2, 3])
              *     ->willSetLastInsertId(1, 2, 3);
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', [1, 2, 3]);
              */
-            'Match with query matchers, with consecutive calls' => [
+            'Match with query matchers and parameters, with consecutive calls' => [
                 [
                     [
                         'expects' => $this->exactly(3),
-                        'query' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'query' => 'INSERT INTO `t1` VALUES (?, ?, ?)',
+                        'with' => ['a', 'b', 'c'],
                         'will' => new Stub\ConsecutiveCallsStub([
                             new Stub\SetLastInsertIdStub(1),
                             new Stub\SetLastInsertIdStub(2),
@@ -302,17 +433,17 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']],
                         'result' => 'getLastInsertId',
                         'expected' => 1,
                     ],
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']],
                         'result' => 'getLastInsertId',
                         'expected' => 2,
                     ],
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']],
                         'result' => 'getLastInsertId',
                         'expected' => 3,
                     ],
@@ -335,7 +466,7 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT * FROM `t2`',
+                        'invoke' => ['SELECT * FROM `t2`'],
                         'expected' => $this->createExpectationFailedException(),
                     ],
                 ],
@@ -358,12 +489,12 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'UPDATE `t1` SET `foo` = "bar"',
+                        'invoke' => ['UPDATE `t1` SET `foo` = "bar"'],
                         'result' => 'getAffectedRows',
                         'expected' => 1,
                     ],
                     [
-                        'invoke' => 'UPDATE `t1` SET `foo` = "bar"',
+                        'invoke' => ['UPDATE `t1` SET `foo` = "bar"'],
                         'result' => 'getAffectedRows',
                         'expected' => 1,
                     ],
@@ -386,7 +517,7 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'SELECT * FROM `t`',
+                        'invoke' => ['SELECT * FROM `t` WHERE `c` = 1'],
                         'result' => 'getResultSet',
                         'expected' => $resultSet1,
                     ],
@@ -409,7 +540,7 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'UPDATE `t` SET `foo` = "bar"',
+                        'invoke' => ['UPDATE `t` SET `foo` = "bar"'],
                         'expected' => $this->createExpectationFailedException(),
                     ],
                 ],
@@ -417,22 +548,24 @@ class MockIntegrationTest extends Testcase
             ],
             /**
              * $mock->expects($this->exactly(4))
-             *     ->query('INSERT INTO `t1` VALUES ("a", "b", "c")')
+             *     ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
+             *     ->with(['a', 'b', 'c'])
              *     ->onConsecutiveCalls()
              *     ->willSetLastInsertId(1)
              *     ->willSetLastInsertId(2)
              *     ->willThrowException(new RuntimeException('Deadlock'))
              *     ->willSetLastInsertId(3);
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
-             * $mock->invoke('INSERT INTO `t1` VALUES ("a", "b", "c")');
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
+             * $mock->invoke('INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']);
              */
             'Match with query matchers, with consecutive calls builder' => [
                 [
                     [
                         'expects' => $this->exactly(4),
-                        'query' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'query' => 'INSERT INTO `t1` VALUES (?, ?, ?)',
+                        'with' => ['a', 'b', 'c'],
                         'onConsecutiveCalls' => [
                             new Stub\SetLastInsertIdStub(1),
                             new Stub\SetLastInsertIdStub(2),
@@ -443,21 +576,21 @@ class MockIntegrationTest extends Testcase
                 ],
                 [
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']],
                         'result' => 'getLastInsertId',
                         'expected' => 1,
                     ],
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']],
                         'result' => 'getLastInsertId',
                         'expected' => 2,
                     ],
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']],
                         'expected' => new RuntimeException,
                     ],
                     [
-                        'invoke' => 'INSERT INTO `t1` VALUES ("a", "b", "c")',
+                        'invoke' => ['INSERT INTO `t1` VALUES (?, ?, ?)', ['a', 'b', 'c']],
                         'result' => 'getLastInsertId',
                         'expected' => 3,
                     ],

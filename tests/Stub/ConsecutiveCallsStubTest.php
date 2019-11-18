@@ -70,7 +70,7 @@ class ConsecutiveCallsStubTest extends Testcase
         return [
             [
                 [
-                    $this->createStub('setResultSet', $resultSet1),
+                    $this->createStubMock('setResultSet', $resultSet1),
                 ],
                 [
                     $this->createInvocationExpectMethod('setResultSet', $resultSet1),
@@ -78,8 +78,8 @@ class ConsecutiveCallsStubTest extends Testcase
             ],
             [
                 [
-                    $this->createStub('setLastInsertId', 1),
-                    $this->createStub('setLastInsertId', 2),
+                    $this->createStubMock('setLastInsertId', 1),
+                    $this->createStubMock('setLastInsertId', 2),
                 ],
                 [
                     $this->createInvocationExpectMethod('setLastInsertId', 1),
@@ -90,7 +90,7 @@ class ConsecutiveCallsStubTest extends Testcase
         ];
     }
 
-    private function createStub(string $method, $argument): Stub
+    private function createStubMock(string $method, $argument): Stub
     {
         $stub = $this->createMock(Stub::class);
         $stub->expects($this->once())
