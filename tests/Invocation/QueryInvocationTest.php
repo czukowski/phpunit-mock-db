@@ -30,6 +30,23 @@ class QueryInvocationTest extends Testcase
     }
 
     /**
+     * @dataProvider  providerParameters
+     */
+    public function testParameters(string $query, array $parameters): void
+    {
+        $object = $this->createObject($query);
+        $object->setParameters($parameters);
+        $this->assertSame($parameters, $object->getParameters());
+    }
+
+    public function providerParameters(): array
+    {
+        return [
+            ['SELECT * FROM `t1` WHERE `c` = ?', [1]],
+        ];
+    }
+
+    /**
      * @dataProvider  provideAffectedRows
      */
     public function testAffectedRows(string $query, int $value): void

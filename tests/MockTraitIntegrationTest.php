@@ -3,7 +3,6 @@
 namespace Cz\PHPUnit\MockDB;
 
 use Cz\PHPUnit\MockDB\Invocation,
-    LogicException,
     PHPUnit\Framework\Constraint\Constraint,
     PHPUnit\Framework\Exception as FrameworkException,
     RuntimeException,
@@ -372,34 +371,7 @@ class MockTraitIntegrationTest extends Testcase
 
     protected function setUp(): void
     {
-        $instance = NULL;
-        $this->db = $this->createPartialMock(
-            DatabaseDriverInterface::class,
-            ['setMockObject', 'query']
-        );
-        $this->db->expects($this->any())
-            ->method('setMockObject')
-            ->willReturnCallback(function (Mock $mock) use ( & $instance) {
-                if ($instance !== NULL) {
-                    throw new LogicException('Mock already set');
-                }
-                $instance = $mock;
-            });
-        $this->db->expects($this->any())
-            ->method('query')
-            ->willReturnCallback(function ($query) use ( & $instance) {
-                // A super-simple implementation for a fake database driver.
-                $invocation = $instance->invoke($query);
-                if (strpos($query, 'SELECT') === 0) {
-                    return $invocation->getResultSet();
-                }
-                elseif (strpos($query, 'INSERT') === 0) {
-                    return $invocation->getLastInsertId();
-                }
-                elseif (strpos($query, 'UPDATE') === 0 || strpos($query, 'DELETE') === 0) {
-                    return $invocation->getAffectedRows();
-                }
-            });
+        $this->db = new TestingDatabaseDriver;
     }
 
     protected function tearDown(): void
