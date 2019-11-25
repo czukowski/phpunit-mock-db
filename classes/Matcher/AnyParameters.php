@@ -34,7 +34,7 @@ class AnyParameters implements ParametersMatcher
     public function invoked(BaseInvocation $invocation)
     {}
 
-    public function verify(): void
+    public function verify()
     {}
 
 }
