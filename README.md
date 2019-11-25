@@ -11,12 +11,12 @@ similar to PHPUnit Mock Objects.
 Installation
 ------------
 
-Pick your version! Version numbering follows major PHPUnit version numbers, so for a given
-PHPUnit N.x, the installation command would look like this:
-
 ```sh
-composer require czukowski/phpunit-mock-db "~N.0"
+composer require czukowski/phpunit-mock-db
 ```
+
+Version numbering follows major PHPUnit version numbers, so for a given PHPUnit N.x, you'll get
+the appropriate version of this package (this should happen automatically).
 
 Usage
 -----
@@ -94,12 +94,13 @@ $mock->expects($this->once())
 ```
 
 Expect same query executed exactly three times and return different last insert IDs on each
-consecutive call:
+consecutive call, also note how this query is parametrized:
 
 ```php
 $this->createDatabaseMock()
     ->expects($this->exactly(3))
-    ->query('INSERT INTO `t1` VALUES ("a", "b", "c")')
+    ->query('INSERT INTO `t1` VALUES (?, ?, ?)')
+    ->with(['a', 'b', 'c'])
     ->willSetLastInsertId(1, 2, 3);
 ```
 
