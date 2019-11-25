@@ -2,6 +2,8 @@
 namespace Cz\PHPUnit\MockDB\Builder;
 
 use Cz\PHPUnit\MockDB\Matcher,
+    Cz\PHPUnit\MockDB\Matcher\AnyParameters,
+    Cz\PHPUnit\MockDB\Matcher\ParametersMatch,
     Cz\PHPUnit\MockDB\Matcher\QueryMatcher,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Stub,
@@ -64,6 +66,25 @@ class InvocationMocker
             $constraint = new EqualsSQLQueriesConstraint($constraint);
         }
         $this->matcher->setQueryMatcher(new QueryMatcher($constraint));
+        return $this;
+    }
+
+    /**
+     * @param   array  $parameters
+     * @return  $this
+     */
+    public function with(array $parameters)
+    {
+        $this->matcher->setParametersMatcher(new ParametersMatch($parameters));
+        return $this;
+    }
+
+    /**
+     * @return  $this
+     */
+    public function withAnyParameters()
+    {
+        $this->matcher->setParametersMatcher(new AnyParameters);
         return $this;
     }
 

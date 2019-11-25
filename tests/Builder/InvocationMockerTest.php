@@ -2,6 +2,8 @@
 namespace Cz\PHPUnit\MockDB\Builder;
 
 use Cz\PHPUnit\MockDB\Matcher,
+    Cz\PHPUnit\MockDB\Matcher\AnyParameters,
+    Cz\PHPUnit\MockDB\Matcher\ParametersMatch,
     Cz\PHPUnit\MockDB\Matcher\QueryMatcher,
     Cz\PHPUnit\MockDB\Matcher\RecordedInvocation,
     Cz\PHPUnit\MockDB\Stub,
@@ -65,6 +67,49 @@ class InvocationMockerTest extends Testcase
             [new EqualsSQLQueriesConstraint('SELECT * FROM `t1`'), EqualsSQLQueriesConstraint::class],
             [$this->stringStartsWith('SELECT'), StringStartsWith::class],
         ];
+    }
+
+    /**
+     * @dataProvider  provideWith
+     */
+    public function testWith($parameters, $expected)
+    {
+        $object = $this->createObject();
+        $self = $object->with($parameters);
+        $this->assertSame($object, $self);
+        $parametersMatch = $this->getObjectMatcher($object)
+            ->getParametersMatcher();
+        $this->assertInstanceOf(ParametersMatch::class, $parametersMatch);
+        $actual = $this->getObjectAttribute($parametersMatch, 'parameters');
+        $this->assertCount(count($expected), $actual);
+        for ($i = 0; $i < count($expected); $i++) {
+            if ($expected[$i] instanceof Constraint) {
+                $this->assertSame($expected[$i], $actual[$i]);
+            }
+            else {
+                $this->assertInstanceOf(Constraint::class, $actual[$i]);
+                $actual[$i]->evaluate($expected[$i]);
+            }
+        }
+    }
+
+    public function provideWith()
+    {
+        $anyMatcher = $this->anything();
+        return [
+            [[1, 2], [1, 2]],
+            [[3.14, $anyMatcher], [3.14, $anyMatcher]],
+        ];
+    }
+
+    public function testWithAnyParameters()
+    {
+        $object = $this->createObject();
+        $self = $object->withAnyParameters();
+        $this->assertSame($object, $self);
+        $parametersMatch = $this->getObjectMatcher($object)
+            ->getParametersMatcher();
+        $this->assertInstanceOf(AnyParameters::class, $parametersMatch);
     }
 
     /**
