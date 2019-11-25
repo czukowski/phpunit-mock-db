@@ -15,6 +15,16 @@ interface Invocation
     function getQuery(): string;
 
     /**
+     * @return  array
+     */
+    function getParameters(): array;
+
+    /**
+     * @param  array  $parameters
+     */
+    function setParameters(array $parameters);
+
+    /**
      * @return  integer|NULL
      */
     function getAffectedRows();
