@@ -43,7 +43,8 @@ class MatcherInvocationWrapper implements RecordedInvocation
     }
 
     /**
-     * @param  BaseInvocation  $invocation
+     * @param   BaseInvocation  $invocation
+     * @return  boolean
      */
     public function matches(BaseInvocation $invocation)
     {

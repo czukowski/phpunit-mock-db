@@ -8,7 +8,8 @@ use Cz\PHPUnit\MockDB\Builder\InvocationMocker as InvocationMockerBuilder,
     Cz\PHPUnit\MockDB\MockObject\MatcherInvocationWrapper,
     PHPUnit_Framework_Exception as Exception,
     PHPUnit_Framework_MockObject_Matcher_Invocation as MockObjectMatcherInvocation,
-    PHPUnit_Util_InvalidArgumentHelper as InvalidArgumentHelper;
+    PHPUnit_Util_InvalidArgumentHelper as InvalidArgumentHelper,
+    LogicException;
 
 /**
  * Mock
@@ -50,11 +51,21 @@ class Mock
 
     /**
      * @param   Invocation|string  $query
+     * @param   array              $parameters
      * @return  Invocation
+     * @throws  LogicException
      */
-    public function invoke($query)
+    public function invoke($query, array $parameters = [])
     {
-        $invocation = $query instanceof Invocation ? $query : new QueryInvocation($query);
+        if ($query instanceof Invocation) {
+            $invocation = $query;
+            if (func_num_args() !== 1) {
+                throw new LogicException('When argument #1 is Invocation object, passing the second argument makes no sense');
+            }
+        }
+        else {
+            $invocation = new QueryInvocation($query, $parameters);
+        }
         $this->getInvocationMocker()
             ->invoke($invocation);
         return $invocation;

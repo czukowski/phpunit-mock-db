@@ -167,6 +167,9 @@ class InvocationMockerTest extends Testcase
     private function createInvokeTestCase($requireMatch, array $matchersWillMatch, $expected)
     {
         $invocation = $this->createMock(Invocation::class);
+        $invocation->expects($this->any())
+            ->method('getParameters')
+            ->willReturn([]);
         return [
             $requireMatch,
             array_map(

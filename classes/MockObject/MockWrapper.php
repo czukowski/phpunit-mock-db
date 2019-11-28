@@ -11,10 +11,9 @@ use Cz\PHPUnit\MockDB\InvocationMocker,
 /**
  * MockWrapper
  * 
- * This class purpose is to be injected into a test case in order to verify expectations.
+ * This class only purpose is to be injected into a test case in order to verify expectations.
  * Only `__phpunit_verify` and `__phpunit_hasMatchers` methods are important for this.
- * A few other simple methods are implemented as well and others are throwing `LogicException`
- * in case they are called.
+ * All other methods will throw `LogicException` in case they are called.
  * 
  * @author   czukowski
  * @license  MIT License
@@ -45,6 +44,7 @@ class MockWrapper implements MockObject
 
     /**
      * @throws  ExpectationFailedException
+     * @throws  LogicException
      */
     public function __phpunit_verify()
     {

@@ -20,6 +20,10 @@ class QueryInvocation implements Invocation
      */
     private $lastInsertId;
     /**
+     * @var  array
+     */
+    private $parameters;
+    /**
      * @var  string
      */
     private $query;
@@ -30,10 +34,12 @@ class QueryInvocation implements Invocation
 
     /**
      * @param  string  $query
+     * @param  array   $parameters
      */
-    public function __construct($query)
+    public function __construct($query, array $parameters = [])
     {
         $this->query = $query;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -42,6 +48,22 @@ class QueryInvocation implements Invocation
     public function getQuery()
     {
         return $this->query;
+    }
+
+    /**
+     * @return  array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param  iterable  $parameters
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
     }
 
     /**
