@@ -29,7 +29,7 @@ class ReturnResultSetStub implements Stub
     /**
      * @param  Invocation  $invocation
      */
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         $invocation->setResultSet($this->value);
     }

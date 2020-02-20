@@ -33,7 +33,7 @@ class Mock
      * @return  InvocationMockerBuilder
      * @throws  InvalidArgumentException
      */
-    public function expects($matcher)
+    public function expects($matcher): InvocationMockerBuilder
     {
         if ($matcher instanceof InvocationOrder) {
             $matcher = new MatcherInvocationWrapper($matcher, $this->getInvocationsContainer());
@@ -54,7 +54,7 @@ class Mock
      * @return  Invocation
      * @throws  LogicException
      */
-    public function invoke($query, array $parameters = [])
+    public function invoke($query, array $parameters = []): Invocation
     {
         if ($query instanceof Invocation) {
             $invocation = $query;

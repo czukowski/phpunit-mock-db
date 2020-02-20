@@ -15,5 +15,5 @@ interface MatcherCollection
     /**
      * @param  Invocation  $matcher
      */
-    public function addMatcher(Invocation $matcher);
+    public function addMatcher(Invocation $matcher): void;
 }

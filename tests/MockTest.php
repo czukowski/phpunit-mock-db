@@ -72,8 +72,8 @@ class MockTest extends Testcase
             $matcher,
             function ($actual, $container) use ($matcher) {
                 $this->assertInstanceOf(MatcherInvocationWrapper::class, $actual);
-                $this->assertSame($container, $this->getObjectAttribute($actual, 'container'));
-                $this->assertSame($matcher, $this->getObjectAttribute($actual, 'invocation'));
+                $this->assertSame($container, $this->getObjectPropertyValue($actual, 'container'));
+                $this->assertSame($matcher, $this->getObjectPropertyValue($actual, 'invocation'));
             }
         ];
     }

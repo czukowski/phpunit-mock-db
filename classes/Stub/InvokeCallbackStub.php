@@ -29,7 +29,7 @@ class InvokeCallbackStub implements Stub
     /**
      * @param  Invocation  $invocation
      */
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         call_user_func($this->callback, $invocation);
     }

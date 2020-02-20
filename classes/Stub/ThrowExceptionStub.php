@@ -30,7 +30,7 @@ class ThrowExceptionStub implements Stub
     /**
      * @param  Invocation  $invocation
      */
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         throw $this->exception;
     }

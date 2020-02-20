@@ -41,16 +41,15 @@ class ConsecutiveCallsStub implements Stub
     /**
      * @param  Stub  $stub
      */
-    public function addStub(Stub $stub)
+    public function addStub(Stub $stub): void
     {
         $this->stack[] = $stub;
     }
 
     /**
-     * @param   Invocation  $invocation
-     * @return  mixed
+     * @param  Invocation  $invocation
      */
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         $this->current = array_shift($this->stack);
         if ( ! $this->current) {

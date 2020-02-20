@@ -29,7 +29,7 @@ class SetLastInsertIdStub implements Stub
     /**
      * @param  Invocation  $invocation
      */
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): void
     {
         $invocation->setLastInsertId($this->value);
     }

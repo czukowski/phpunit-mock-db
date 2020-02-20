@@ -15,5 +15,5 @@ interface Stub extends SelfDescribing
     /**
      * @param  Invocation
      */
-    function invoke(Invocation $invocation);
+    function invoke(Invocation $invocation): void;
 }

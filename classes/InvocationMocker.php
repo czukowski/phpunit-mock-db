@@ -62,7 +62,7 @@ class InvocationMocker implements MatcherCollection, Invokable
      * @param   RecordedInvocation  $matcher
      * @return  InvocationMockerBuilder
      */
-    public function expects(RecordedInvocation $matcher)
+    public function expects(RecordedInvocation $matcher): InvocationMockerBuilder
     {
         return new InvocationMockerBuilder($this, $matcher);
     }

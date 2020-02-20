@@ -30,7 +30,7 @@ trait MockTrait
      * @return  DatabaseDriverInterface
      * @throws  LogicException
      */
-    protected function getDatabaseDriver()
+    protected function getDatabaseDriver(): DatabaseDriverInterface
     {
         // Override this method to return a `DatabaseDriverInterface` instance.
         throw new LogicException('Missing implementation');
