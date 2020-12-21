@@ -1,7 +1,7 @@
 Database Abstraction Layer mocking helpers for PHPUnit
 ======================================================
 
-[![Build Status](https://travis-ci.org/czukowski/phpunit-mock-db.svg?branch=master)](https://travis-ci.org/czukowski/phpunit-mock-db)
+![PHPUnit](https://github.com/czukowski/phpunit-mock-db/workflows/PHPUnit/badge.svg?branch=phpunit-8.4)
 
 A mock-object library for database queries testing, without having to initialize in-memory
 database from fixtures. Rather, every query executed by a tested code can be set to return
