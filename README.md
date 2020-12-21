@@ -8,6 +8,13 @@ database from fixtures. Rather, every query executed by a tested code can be set
 a pre-defined result set, affected rows count or last insert ID. All with a familiar interface
 similar to PHPUnit Mock Objects.
 
+Unsupported version!
+--------------------
+
+This version is too old to be supported any longer, so it lacks some of the features, most notably
+mocking of parametric queries for use with prepared statements. Please use a newer version if you
+need it.
+
 Installation
 ------------
 
